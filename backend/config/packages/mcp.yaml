@@ -1,0 +1,22 @@
+mcp:
+    servers:
+        real_estate:
+            name: 'real-estate-search'
+            version: '1.0.0'
+            description: 'Search and inspect real estate listings (apartments, houses, studios, ...) in German cities.'
+            instructions: |
+                Use "list_filter_options" to discover the available cities and property types,
+                "search_properties" to find listings matching the user's criteria (all filters are optional and combined with AND),
+                and "get_property" to fetch the full details of a single listing by its id.
+                Prices are purchase prices in EUR.
+            transports:
+                # `php bin/console mcp:server` (local MCP clients such as Claude Desktop / Claude Code)
+                stdio: true
+                # Streamable HTTP endpoint (MCP Inspector, remote clients)
+                http: true
+            http:
+                path: /mcp
+                # DNS rebinding protection. "backend" is the docker-compose service name.
+                allowed_hosts: ['localhost', '127.0.0.1', 'backend']
+            registry:
+                tools: ['App\Mcp\']
