@@ -1,0 +1,563 @@
+[
+  {
+    "title": "Bright family apartment near Mauerpark",
+    "description": "Sunny apartment on the fourth floor of a renovated pre-war building in Prenzlauer Berg. High ceilings, original wooden floors and a south-facing balcony overlooking a quiet courtyard. Kindergartens, cafés and the Mauerpark are within walking distance.",
+    "type": "apartment",
+    "city": "Berlin",
+    "district": "Prenzlauer Berg",
+    "address": "Oderberger Straße 21, 10435 Berlin",
+    "price": 489000,
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "livingArea": 92,
+    "yearBuilt": 1905,
+    "features": ["balcony", "elevator", "cellar", "renovated"],
+    "latitude": 52.5388,
+    "longitude": 13.4096,
+    "images": [
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-08-14"
+  },
+  {
+    "title": "Detached family house with large garden",
+    "description": "Spacious detached house in green Zehlendorf with a 700 m² garden, a fireplace in the living room and a double garage. Close to the Schlachtensee lake and excellent international schools.",
+    "type": "house",
+    "city": "Berlin",
+    "district": "Zehlendorf",
+    "address": "Argentinische Allee 48, 14163 Berlin",
+    "price": 1250000,
+    "bedrooms": 5,
+    "bathrooms": 3,
+    "livingArea": 180,
+    "yearBuilt": 1968,
+    "features": ["garden", "garage", "fireplace", "cellar", "terrace"],
+    "latitude": 52.4338,
+    "longitude": 13.2596,
+    "images": [
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-07-02"
+  },
+  {
+    "title": "Compact studio close to Boxhagener Platz",
+    "description": "Well-designed studio with a separate kitchenette, ideal as a first home or as an investment. The building was fully refurbished in 2019 and the weekend market at Boxhagener Platz is around the corner.",
+    "type": "studio",
+    "city": "Berlin",
+    "district": "Friedrichshain",
+    "address": "Gärtnerstraße 7, 10245 Berlin",
+    "price": 215000,
+    "bedrooms": 0,
+    "bathrooms": 1,
+    "livingArea": 34,
+    "yearBuilt": 1910,
+    "features": ["renovated", "fitted kitchen"],
+    "latitude": 52.5107,
+    "longitude": 13.4592,
+    "images": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-09-01"
+  },
+  {
+    "title": "Penthouse with rooftop terrace in Mitte",
+    "description": "Exclusive penthouse on the top two floors of a new-build residence. Floor-to-ceiling windows, a 60 m² rooftop terrace with views of the TV tower, underfloor heating and a private elevator access.",
+    "type": "penthouse",
+    "city": "Berlin",
+    "district": "Mitte",
+    "address": "Linienstraße 140, 10115 Berlin",
+    "price": 1480000,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "livingArea": 145,
+    "yearBuilt": 2021,
+    "features": ["terrace", "elevator", "underfloor heating", "parking", "smart home"],
+    "latitude": 52.5286,
+    "longitude": 13.3998,
+    "images": [
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-06-20"
+  },
+  {
+    "title": "Renovated Altbau apartment in Neukölln",
+    "description": "Charming apartment in a classic Berlin Altbau with stucco ceilings and double doors. Three bedrooms, a modern bathroom and a kitchen with dining area. Tempelhofer Feld is only five minutes away.",
+    "type": "apartment",
+    "city": "Berlin",
+    "district": "Neukölln",
+    "address": "Weserstraße 58, 12045 Berlin",
+    "price": 459000,
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "livingArea": 88,
+    "yearBuilt": 1902,
+    "features": ["balcony", "renovated", "cellar"],
+    "latitude": 52.4811,
+    "longitude": 13.4354,
+    "images": [
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-09-10"
+  },
+  {
+    "title": "Elegant two-bedroom flat near Savignyplatz",
+    "description": "Stylish apartment in a representative building in Charlottenburg. Parquet floors, a bright living room with bay window and a balcony facing the tree-lined street.",
+    "type": "apartment",
+    "city": "Berlin",
+    "district": "Charlottenburg",
+    "address": "Grolmanstraße 33, 10623 Berlin",
+    "price": 419000,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "livingArea": 74,
+    "yearBuilt": 1908,
+    "features": ["balcony", "elevator"],
+    "latitude": 52.5063,
+    "longitude": 13.3200,
+    "images": [
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-08-28"
+  },
+  {
+    "title": "Modern townhouse in quiet Pankow",
+    "description": "End-of-terrace townhouse from 2016 with a private garden, a roof terrace and a parking space. Energy-efficient construction with heat pump. Good tram connection to the city centre.",
+    "type": "townhouse",
+    "city": "Berlin",
+    "district": "Pankow",
+    "address": "Florastraße 12, 13187 Berlin",
+    "price": 495000,
+    "bedrooms": 4,
+    "bathrooms": 2,
+    "livingArea": 138,
+    "yearBuilt": 2016,
+    "features": ["garden", "terrace", "parking", "heat pump"],
+    "latitude": 52.5693,
+    "longitude": 13.4010,
+    "images": [
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-07-18"
+  },
+  {
+    "title": "Loft-style apartment by the Landwehr Canal",
+    "description": "Open-plan apartment in a converted factory building in Kreuzberg. Exposed brick walls, 3.8 m ceilings, three bedrooms and a large kitchen island. Canal-side cafés right outside the door.",
+    "type": "apartment",
+    "city": "Berlin",
+    "district": "Kreuzberg",
+    "address": "Paul-Lincke-Ufer 40, 10999 Berlin",
+    "price": 685000,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "livingArea": 115,
+    "yearBuilt": 1895,
+    "features": ["elevator", "renovated", "fitted kitchen"],
+    "latitude": 52.4944,
+    "longitude": 13.4270,
+    "images": [
+      "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-09-05"
+  },
+  {
+    "title": "Affordable three-bedroom apartment in Spandau",
+    "description": "Well-kept apartment with a practical layout, a loggia and a fitted kitchen. The building has an elevator and a playground. Regional trains reach Berlin Hauptbahnhof in 15 minutes.",
+    "type": "apartment",
+    "city": "Berlin",
+    "district": "Spandau",
+    "address": "Carl-Schurz-Straße 15, 13597 Berlin",
+    "price": 329000,
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "livingArea": 81,
+    "yearBuilt": 1974,
+    "features": ["balcony", "elevator", "fitted kitchen", "parking"],
+    "latitude": 52.5357,
+    "longitude": 13.1976,
+    "images": [
+      "https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-08-03"
+  },
+  {
+    "title": "Classic Schwabing apartment near the English Garden",
+    "description": "Two-bedroom apartment in one of Munich's most sought-after neighbourhoods. Herringbone parquet, a west-facing balcony and a completely renovated bathroom. The English Garden is a three-minute walk.",
+    "type": "apartment",
+    "city": "Munich",
+    "district": "Schwabing",
+    "address": "Ainmillerstraße 9, 80801 München",
+    "price": 950000,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "livingArea": 78,
+    "yearBuilt": 1912,
+    "features": ["balcony", "elevator", "renovated"],
+    "latitude": 48.1590,
+    "longitude": 11.5820,
+    "images": [
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-07-25"
+  },
+  {
+    "title": "Villa with pool in Bogenhausen",
+    "description": "Representative villa on a 1,100 m² plot in Bogenhausen. Five bedrooms, a wellness area with sauna, a heated outdoor pool and a mature garden. Discreet location close to the Isar river.",
+    "type": "house",
+    "city": "Munich",
+    "district": "Bogenhausen",
+    "address": "Pienzenauerstraße 30, 81679 München",
+    "price": 2900000,
+    "bedrooms": 5,
+    "bathrooms": 4,
+    "livingArea": 320,
+    "yearBuilt": 1998,
+    "features": ["garden", "pool", "sauna", "garage", "terrace"],
+    "latitude": 48.1540,
+    "longitude": 11.6160,
+    "images": [
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-05-30"
+  },
+  {
+    "title": "Student-friendly studio in Maxvorstadt",
+    "description": "Furnished studio between the Ludwig Maximilian University and the Pinakotheken museums. Fitted kitchen, modern shower room and a small balcony. Currently let, ideal as a capital investment.",
+    "type": "studio",
+    "city": "Munich",
+    "district": "Maxvorstadt",
+    "address": "Amalienstraße 71, 80799 München",
+    "price": 399000,
+    "bedrooms": 0,
+    "bathrooms": 1,
+    "livingArea": 31,
+    "yearBuilt": 1985,
+    "features": ["balcony", "furnished", "fitted kitchen"],
+    "latitude": 48.1500,
+    "longitude": 11.5790,
+    "images": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-09-12"
+  },
+  {
+    "title": "Spacious family apartment in Sendling",
+    "description": "Three-bedroom apartment with a large living and dining area, a guest toilet and a sunny loggia. Underground parking space included. Excellent public transport connections via U3/U6.",
+    "type": "apartment",
+    "city": "Munich",
+    "district": "Sendling",
+    "address": "Plinganserstraße 44, 81369 München",
+    "price": 1090000,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "livingArea": 105,
+    "yearBuilt": 2004,
+    "features": ["balcony", "elevator", "parking", "cellar"],
+    "latitude": 48.1180,
+    "longitude": 11.5440,
+    "images": [
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-08-19"
+  },
+  {
+    "title": "Townhouse with garden in Pasing",
+    "description": "Family-friendly townhouse on three levels with a south-facing garden and a finished basement. Schools, shopping arcades and the Pasing S-Bahn station are all within walking distance.",
+    "type": "townhouse",
+    "city": "Munich",
+    "district": "Pasing",
+    "address": "Landsberger Straße 480, 81241 München",
+    "price": 1350000,
+    "bedrooms": 4,
+    "bathrooms": 2,
+    "livingArea": 150,
+    "yearBuilt": 2009,
+    "features": ["garden", "cellar", "parking", "terrace"],
+    "latitude": 48.1440,
+    "longitude": 11.4610,
+    "images": [
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-06-11"
+  },
+  {
+    "title": "Waterfront penthouse in HafenCity",
+    "description": "Penthouse with panoramic views over the Elbe and the Elbphilharmonie. Wrap-around terrace, premium kitchen, two underground parking spaces and 24/7 concierge service.",
+    "type": "penthouse",
+    "city": "Hamburg",
+    "district": "HafenCity",
+    "address": "Am Kaiserkai 56, 20457 Hamburg",
+    "price": 1650000,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "livingArea": 160,
+    "yearBuilt": 2012,
+    "features": ["terrace", "elevator", "parking", "concierge", "water view"],
+    "latitude": 53.5413,
+    "longitude": 9.9864,
+    "images": [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-07-08"
+  },
+  {
+    "title": "Charming Altbau flat in Eimsbüttel",
+    "description": "Two-bedroom apartment in a typical Hamburg Gründerzeit building. Bright rooms, a small balcony to the back and a lively neighbourhood with markets and cafés on the Osterstraße.",
+    "type": "apartment",
+    "city": "Hamburg",
+    "district": "Eimsbüttel",
+    "address": "Osterstraße 102, 20259 Hamburg",
+    "price": 575000,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "livingArea": 70,
+    "yearBuilt": 1900,
+    "features": ["balcony", "cellar"],
+    "latitude": 53.5750,
+    "longitude": 9.9530,
+    "images": [
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-08-22"
+  },
+  {
+    "title": "Captain's house with Elbe views in Blankenese",
+    "description": "Listed captain's house on the famous Treppenviertel slope with unobstructed views of the Elbe. Six bedrooms, a library, a terraced garden and lots of historic charm.",
+    "type": "house",
+    "city": "Hamburg",
+    "district": "Blankenese",
+    "address": "Strandweg 18, 22587 Hamburg",
+    "price": 2400000,
+    "bedrooms": 6,
+    "bathrooms": 3,
+    "livingArea": 260,
+    "yearBuilt": 1880,
+    "features": ["garden", "terrace", "water view", "fireplace"],
+    "latitude": 53.5580,
+    "longitude": 9.8050,
+    "images": [
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-04-27"
+  },
+  {
+    "title": "Modern studio in Altona",
+    "description": "New-build studio with floor-to-ceiling windows, a fitted kitchen and a balcony. Close to Altona station and the Ottensen shopping streets.",
+    "type": "studio",
+    "city": "Hamburg",
+    "district": "Altona",
+    "address": "Große Bergstraße 160, 22767 Hamburg",
+    "price": 245000,
+    "bedrooms": 0,
+    "bathrooms": 1,
+    "livingArea": 36,
+    "yearBuilt": 2019,
+    "features": ["balcony", "elevator", "fitted kitchen"],
+    "latitude": 53.5500,
+    "longitude": 9.9350,
+    "images": [
+      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-09-15"
+  },
+  {
+    "title": "Three-bedroom apartment near the Stadtpark",
+    "description": "Family apartment in Winterhude with a generous living room, a separate kitchen and two balconies. The Stadtpark and the Alster canals are just a short walk away.",
+    "type": "apartment",
+    "city": "Hamburg",
+    "district": "Winterhude",
+    "address": "Jarrestraße 29, 22303 Hamburg",
+    "price": 720000,
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "livingArea": 98,
+    "yearBuilt": 1930,
+    "features": ["balcony", "cellar", "renovated"],
+    "latitude": 53.5900,
+    "longitude": 10.0000,
+    "images": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-08-09"
+  },
+  {
+    "title": "Cosy apartment in Sachsenhausen",
+    "description": "Two-bedroom apartment in the traditional apple-wine district of Sachsenhausen. Quiet side street, a balcony facing the garden and the Museumsufer within walking distance.",
+    "type": "apartment",
+    "city": "Frankfurt",
+    "district": "Sachsenhausen",
+    "address": "Schweizer Straße 88, 60594 Frankfurt am Main",
+    "price": 495000,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "livingArea": 72,
+    "yearBuilt": 1958,
+    "features": ["balcony", "cellar"],
+    "latitude": 50.1000,
+    "longitude": 8.6850,
+    "images": [
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-07-30"
+  },
+  {
+    "title": "Skyline penthouse in the Westend",
+    "description": "Four-bedroom penthouse with direct views of the Frankfurt skyline. Two terraces, a home office, high-end finishes and two parking spaces in the underground garage.",
+    "type": "penthouse",
+    "city": "Frankfurt",
+    "district": "Westend",
+    "address": "Bockenheimer Landstraße 55, 60325 Frankfurt am Main",
+    "price": 1850000,
+    "bedrooms": 4,
+    "bathrooms": 3,
+    "livingArea": 190,
+    "yearBuilt": 2018,
+    "features": ["terrace", "elevator", "parking", "smart home"],
+    "latitude": 50.1200,
+    "longitude": 8.6600,
+    "images": [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-06-02"
+  },
+  {
+    "title": "Family apartment on the Berger Straße",
+    "description": "Three-bedroom apartment in Bornheim, one of Frankfurt's most popular neighbourhoods. Renovated kitchen and bathroom, a balcony and the famous Berger Straße shops right on the doorstep.",
+    "type": "apartment",
+    "city": "Frankfurt",
+    "district": "Bornheim",
+    "address": "Berger Straße 210, 60385 Frankfurt am Main",
+    "price": 545000,
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "livingArea": 90,
+    "yearBuilt": 1962,
+    "features": ["balcony", "renovated", "cellar"],
+    "latitude": 50.1300,
+    "longitude": 8.7100,
+    "images": [
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-09-03"
+  },
+  {
+    "title": "Studio near Goethe University in Bockenheim",
+    "description": "Practical studio with a fitted kitchen and a modern bathroom. Very good connections to the university campus and the trade fair.",
+    "type": "studio",
+    "city": "Frankfurt",
+    "district": "Bockenheim",
+    "address": "Leipziger Straße 17, 60487 Frankfurt am Main",
+    "price": 229000,
+    "bedrooms": 0,
+    "bathrooms": 1,
+    "livingArea": 29,
+    "yearBuilt": 1972,
+    "features": ["elevator", "fitted kitchen"],
+    "latitude": 50.1220,
+    "longitude": 8.6450,
+    "images": [
+      "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-08-25"
+  },
+  {
+    "title": "Three-bedroom apartment in creative Ehrenfeld",
+    "description": "Bright apartment in a small building with only six units. Three bedrooms, a balcony and a shared garden. Ehrenfeld's bars, galleries and the S-Bahn are close by.",
+    "type": "apartment",
+    "city": "Cologne",
+    "district": "Ehrenfeld",
+    "address": "Körnerstraße 45, 50823 Köln",
+    "price": 425000,
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "livingArea": 86,
+    "yearBuilt": 1956,
+    "features": ["balcony", "garden", "cellar"],
+    "latitude": 50.9500,
+    "longitude": 6.9150,
+    "images": [
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-09-08"
+  },
+  {
+    "title": "Semi-detached house in Lindenthal",
+    "description": "Semi-detached house close to the Stadtwald with a sunny garden, a converted attic and a garage. Quiet residential street, schools and the university nearby.",
+    "type": "house",
+    "city": "Cologne",
+    "district": "Lindenthal",
+    "address": "Bachemer Straße 120, 50931 Köln",
+    "price": 895000,
+    "bedrooms": 4,
+    "bathrooms": 2,
+    "livingArea": 155,
+    "yearBuilt": 1972,
+    "features": ["garden", "garage", "cellar", "terrace"],
+    "latitude": 50.9330,
+    "longitude": 6.9180,
+    "images": [
+      "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-07-14"
+  },
+  {
+    "title": "Stylish apartment in the Belgian Quarter",
+    "description": "Two-bedroom apartment in the trendy Belgisches Viertel. Renovated with care, featuring original tiles, a modern kitchen and a quiet bedroom facing the courtyard.",
+    "type": "apartment",
+    "city": "Cologne",
+    "district": "Belgisches Viertel",
+    "address": "Brüsseler Straße 64, 50672 Köln",
+    "price": 389000,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "livingArea": 66,
+    "yearBuilt": 1906,
+    "features": ["renovated", "fitted kitchen"],
+    "latitude": 50.9380,
+    "longitude": 6.9340,
+    "images": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-08-17"
+  },
+  {
+    "title": "Riverside studio in the Südstadt",
+    "description": "Bright studio a few steps from the Rhine promenade. Includes a fitted kitchen, a balcony and a storage room in the basement.",
+    "type": "studio",
+    "city": "Cologne",
+    "district": "Südstadt",
+    "address": "Rheinuferstraße 3, 50678 Köln",
+    "price": 189000,
+    "bedrooms": 0,
+    "bathrooms": 1,
+    "livingArea": 32,
+    "yearBuilt": 1965,
+    "features": ["balcony", "cellar", "fitted kitchen"],
+    "latitude": 50.9230,
+    "longitude": 6.9680,
+    "images": [
+      "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "listedAt": "2026-09-18"
+  }
+]
