@@ -1,0 +1,31 @@
+{
+  "name": "real-estate-search-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.137",
+    "@nuxt/ui": "~3.3.7",
+    "@vueuse/core": "^13.9.0",
+    "nuxt": "^3.21.11",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@nuxt/test-utils": "^4.3.2",
+    "@vue/test-utils": "^2.5.1",
+    "happy-dom": "^20.14.5",
+    "typescript": "~5.9",
+    "vitest": "^5.0.2",
+    "vue-tsc": "^3.3.11"
+  }
+}
