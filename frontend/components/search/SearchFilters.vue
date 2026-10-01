@@ -45,18 +45,18 @@ const selectedCity = computed<string>({
   set: value => emit('apply', { city: value === ANY ? undefined : value }),
 })
 
-const typeItems = computed(() => [
-  { label: 'All types', value: ANY },
-  ...PROPERTY_TYPES.map((type) => {
-    const count = props.facets?.types.find(facet => facet.value === type)?.count
-    return { label: count === undefined ? propertyTypeLabel(type) : `${propertyTypeLabel(type)} (${count})`, value: type }
-  }),
+const typeOptions = computed(() => [
+  { label: 'All', value: undefined, count: undefined },
+  ...PROPERTY_TYPES.map(type => ({
+    label: propertyTypeLabel(type),
+    value: type,
+    count: props.facets?.types.find(facet => facet.value === type)?.count,
+  })),
 ])
 
-const selectedType = computed<string>({
-  get: () => props.filters.type ?? ANY,
-  set: value => emit('apply', { type: value === ANY ? undefined : (value as PropertyType) }),
-})
+function selectType(type: PropertyType | undefined) {
+  emit('apply', { type })
+}
 
 function selectBedrooms(count: number) {
   emit('apply', { minBedrooms: count === 0 ? undefined : count })
@@ -138,12 +138,29 @@ const activeFilterCount = computed(() => countActiveFilters(props.filters))
       label="Property type"
       name="type"
     >
-      <USelect
-        v-model="selectedType"
-        :items="typeItems"
-        icon="i-lucide-building-2"
-        class="w-full"
-      />
+      <div
+        class="flex flex-wrap gap-1.5"
+        role="radiogroup"
+        aria-label="Property type"
+      >
+        <UButton
+          v-for="option in typeOptions"
+          :key="option.label"
+          :color="filters.type === option.value ? 'primary' : 'neutral'"
+          :variant="filters.type === option.value ? 'solid' : 'outline'"
+          role="radio"
+          :aria-checked="filters.type === option.value"
+          size="sm"
+          class="rounded-full"
+          @click="selectType(option.value)"
+        >
+          {{ option.label }}
+          <span
+            v-if="option.count !== undefined"
+            class="opacity-60"
+          >{{ option.count }}</span>
+        </UButton>
+      </div>
     </UFormField>
 
     <UFormField

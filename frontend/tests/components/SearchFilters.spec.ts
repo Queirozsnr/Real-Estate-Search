@@ -12,6 +12,18 @@ describe('SearchFilters', () => {
     expect(wrapper.emitted('apply')).toEqual([[{ minBedrooms: 3 }]])
   })
 
+  it('applies and clears the property type with chips', async () => {
+    const wrapper = await mountSuspended(SearchFilters, { props: { filters: { sort: 'newest', page: 1, type: 'house' } } })
+    const chips = wrapper.findAll('[role="radiogroup"][aria-label="Property type"] button')
+
+    expect(chips.find(chip => chip.text() === 'House')!.attributes('aria-checked')).toBe('true')
+
+    await chips.find(chip => chip.text() === 'Studio')!.trigger('click')
+    await chips.find(chip => chip.text() === 'All')!.trigger('click')
+
+    expect(wrapper.emitted('apply')).toEqual([[{ type: 'studio' }], [{ type: undefined }]])
+  })
+
   it('clears the bedrooms filter with "Any"', async () => {
     const wrapper = await mountSuspended(SearchFilters, { props: { filters: { sort: 'newest', page: 1, minBedrooms: 2 } } })
 
