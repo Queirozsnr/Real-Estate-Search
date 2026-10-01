@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { PropertySort } from '~/types/property'
+import type { QuickSearchFilters } from '~/utils/quick-search'
 
 useSeoMeta({ title: 'Find your next home' })
 
@@ -16,6 +17,18 @@ function retry() {
 
 const activeFilterCount = computed(() => countActiveFilters(filters.value))
 const mobileFiltersOpen = ref(false)
+const cityNames = computed(() => facets.value?.cities.map(city => city.name) ?? [])
+
+/** The text describes the whole search, so filters it does not mention are cleared (sort is kept). */
+function applyQuickSearch(parsed: QuickSearchFilters) {
+  applyFilters({
+    city: parsed.city,
+    minPrice: parsed.minPrice,
+    maxPrice: parsed.maxPrice,
+    minBedrooms: parsed.minBedrooms,
+    type: parsed.type,
+  })
+}
 
 const sort = computed<PropertySort>({
   get: () => filters.value.sort,
@@ -28,13 +41,25 @@ const isPastLastPage = computed(() => !!data.value && data.value.meta.total > 0 
 
 <template>
   <UContainer class="py-8">
-    <div class="mb-8">
+    <div class="mb-6">
       <h1 class="text-3xl font-bold tracking-tight text-highlighted">
         Find your next home
       </h1>
       <p class="mt-2 text-muted">
         Browse apartments, houses and more in Germany's largest cities.
       </p>
+    </div>
+
+    <div class="mb-8 space-y-3">
+      <QuickSearch
+        :filters="filters"
+        :cities="cityNames"
+        @search="applyQuickSearch"
+      />
+      <McpCallPreview
+        v-if="activeFilterCount > 0"
+        :filters="filters"
+      />
     </div>
 
     <div class="grid gap-8 lg:grid-cols-[17rem_1fr]">
