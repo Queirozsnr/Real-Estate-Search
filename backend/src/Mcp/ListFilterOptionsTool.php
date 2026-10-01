@@ -28,6 +28,7 @@ final readonly class ListFilterOptionsTool
         title: 'List filter options',
         description: 'List the values accepted by search_properties: available cities and property types (with number of listings), the price range in EUR, the maximum number of bedrooms and the sort options.',
         annotations: new ToolAnnotations(readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false),
+        outputSchema: OutputSchemas::LIST_FILTER_OPTIONS,
     )]
     public function __invoke(): array
     {

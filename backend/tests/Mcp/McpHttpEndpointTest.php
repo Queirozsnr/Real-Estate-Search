@@ -6,6 +6,8 @@ namespace App\Tests\Mcp;
 
 use App\Enum\PropertyType;
 use App\Tests\SeededDatabaseTrait;
+use Opis\JsonSchema\Errors\ErrorFormatter;
+use Opis\JsonSchema\Validator;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -86,6 +88,34 @@ final class McpHttpEndpointTest extends WebTestCase
         }
 
         self::assertSame(PropertyType::values(), $properties['type']['anyOf'][0]['enum']);
+    }
+
+    public function testStructuredContentMatchesTheDeclaredOutputSchemas(): void
+    {
+        $tools = array_column($this->rpc('tools/list')['result']['tools'], null, 'name');
+        $validator = new Validator();
+
+        $calls = [
+            ['search_properties', ['city' => 'Berlin', 'minBedrooms' => 3, 'maxPrice' => 500000]],
+            ['search_properties', ['limit' => 2]],
+            ['search_properties', ['city' => 'Paris']],
+            ['get_property', ['id' => 5]],
+            ['list_filter_options', []],
+        ];
+
+        foreach ($calls as [$name, $arguments]) {
+            self::assertArrayHasKey('outputSchema', $tools[$name]);
+
+            $this->rpc('tools/call', ['name' => $name, 'arguments' => $arguments]);
+            // Decode as objects so empty JSON objects (e.g. "filters": {}) keep their type.
+            $result = json_decode((string) $this->client->getResponse()->getContent(), flags: \JSON_THROW_ON_ERROR)->result;
+
+            $validation = $validator->validate($result->structuredContent, json_decode(json_encode($tools[$name]['outputSchema'], \JSON_THROW_ON_ERROR)));
+            self::assertTrue(
+                $validation->isValid(),
+                \sprintf('%s(%s): %s', $name, json_encode($arguments), json_encode($validation->error() ? (new ErrorFormatter())->format($validation->error()) : null)),
+            );
+        }
     }
 
     public function testUnknownPropertyIsReturnedAsToolError(): void

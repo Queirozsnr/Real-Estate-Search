@@ -46,6 +46,7 @@ final readonly class SearchPropertiesTool
             Use get_property to fetch the full details of a result.
             TXT,
         annotations: new ToolAnnotations(readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false),
+        outputSchema: OutputSchemas::SEARCH_PROPERTIES,
     )]
     public function __invoke(
         // Optional filters accept null (clients send it for empty fields) and are written as
@@ -53,6 +54,7 @@ final readonly class SearchPropertiesTool
         #[Schema(definition: [
             'description' => 'City name, case-insensitive (e.g. "Berlin"). Call list_filter_options to see the available cities.',
             'anyOf' => [['type' => 'string', 'maxLength' => 100], ['type' => 'null']],
+            'examples' => ['Berlin', 'Munich', 'Hamburg'],
         ])]
         ?string $city = null,
         #[Schema(definition: [
@@ -63,11 +65,13 @@ final readonly class SearchPropertiesTool
         #[Schema(definition: [
             'description' => 'Maximum purchase price in EUR.',
             'anyOf' => [['type' => 'integer', 'minimum' => 0], ['type' => 'null']],
+            'examples' => [500000],
         ])]
         ?int $maxPrice = null,
         #[Schema(definition: [
             'description' => 'Minimum number of bedrooms (studios have 0).',
             'anyOf' => [['type' => 'integer', 'minimum' => 0, 'maximum' => 20], ['type' => 'null']],
+            'examples' => [3],
         ])]
         ?int $minBedrooms = null,
         #[Schema(definition: [

@@ -29,6 +29,7 @@ final readonly class GetPropertyTool
         title: 'Get property details',
         description: 'Get the full details of a single property (description, address, features, images, location, price per m²) by its id, as returned by search_properties.',
         annotations: new ToolAnnotations(readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false),
+        outputSchema: OutputSchemas::GET_PROPERTY,
     )]
     public function __invoke(
         #[Schema(description: 'The property id.', minimum: 1)]
