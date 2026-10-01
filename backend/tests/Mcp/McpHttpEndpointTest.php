@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Mcp;
 
+use App\Enum\PropertyType;
 use App\Tests\SeededDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -60,6 +61,31 @@ final class McpHttpEndpointTest extends WebTestCase
         self::assertSame(4, $result['structuredContent']['total']);
         // Backwards compatible text content carries the same JSON payload.
         self::assertSame($result['structuredContent'], json_decode($result['content'][0]['text'], true));
+    }
+
+    public function testOptionalFiltersAcceptNull(): void
+    {
+        // Clients such as the MCP Inspector send empty optional fields as null.
+        $response = $this->rpc('tools/call', [
+            'name' => 'search_properties',
+            'arguments' => ['city' => 'Berlin', 'minPrice' => null, 'maxPrice' => 500000, 'minBedrooms' => 3, 'type' => null],
+        ]);
+
+        self::assertFalse($response['result']['isError']);
+        self::assertSame(4, $response['result']['structuredContent']['total']);
+    }
+
+    public function testSearchSchemaIsPortableAndMatchesTheDomainEnum(): void
+    {
+        $tools = array_column($this->rpc('tools/list')['result']['tools'], null, 'name');
+        $properties = $tools['search_properties']['inputSchema']['properties'];
+
+        foreach (['city', 'minPrice', 'maxPrice', 'minBedrooms', 'type'] as $name) {
+            self::assertArrayNotHasKey('type', $properties[$name], "$name should use anyOf, not a type array");
+            self::assertSame(['type' => 'null'], $properties[$name]['anyOf'][1]);
+        }
+
+        self::assertSame(PropertyType::values(), $properties['type']['anyOf'][0]['enum']);
     }
 
     public function testUnknownPropertyIsReturnedAsToolError(): void

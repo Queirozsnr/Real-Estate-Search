@@ -48,15 +48,35 @@ final readonly class SearchPropertiesTool
         annotations: new ToolAnnotations(readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false),
     )]
     public function __invoke(
-        #[Schema(description: 'City name, case-insensitive (e.g. "Berlin"). Call list_filter_options to see the available cities.', maxLength: 100)]
+        // Optional filters accept null (clients send it for empty fields) and are written as
+        // anyOf branches with a single type each, the most portable way to express nullability.
+        #[Schema(definition: [
+            'description' => 'City name, case-insensitive (e.g. "Berlin"). Call list_filter_options to see the available cities.',
+            'anyOf' => [['type' => 'string', 'maxLength' => 100], ['type' => 'null']],
+        ])]
         ?string $city = null,
-        #[Schema(description: 'Minimum purchase price in EUR.', minimum: 0)]
+        #[Schema(definition: [
+            'description' => 'Minimum purchase price in EUR.',
+            'anyOf' => [['type' => 'integer', 'minimum' => 0], ['type' => 'null']],
+        ])]
         ?int $minPrice = null,
-        #[Schema(description: 'Maximum purchase price in EUR.', minimum: 0)]
+        #[Schema(definition: [
+            'description' => 'Maximum purchase price in EUR.',
+            'anyOf' => [['type' => 'integer', 'minimum' => 0], ['type' => 'null']],
+        ])]
         ?int $maxPrice = null,
-        #[Schema(description: 'Minimum number of bedrooms (studios have 0).', minimum: 0, maximum: 20)]
+        #[Schema(definition: [
+            'description' => 'Minimum number of bedrooms (studios have 0).',
+            'anyOf' => [['type' => 'integer', 'minimum' => 0, 'maximum' => 20], ['type' => 'null']],
+        ])]
         ?int $minBedrooms = null,
-        #[Schema(description: 'Property type.')]
+        #[Schema(definition: [
+            'description' => 'Property type.',
+            'anyOf' => [
+                ['type' => 'string', 'enum' => [PropertyType::Apartment->value, PropertyType::House->value, PropertyType::Studio->value, PropertyType::Penthouse->value, PropertyType::Townhouse->value]],
+                ['type' => 'null'],
+            ],
+        ])]
         ?PropertyType $type = null,
         #[Schema(description: 'Sort order of the results.')]
         PropertySort $sort = PropertySort::Newest,
