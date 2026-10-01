@@ -45,7 +45,7 @@ final readonly class PropertyDetails
             district: $property->getDistrict(),
             address: $property->getAddress(),
             price: $property->getPrice(),
-            pricePerSquareMetre: (int) round($property->getPrice() / max(1, $property->getLivingArea())),
+            pricePerSquareMetre: $property->getPricePerSquareMetre(),
             bedrooms: $property->getBedrooms(),
             bathrooms: $property->getBathrooms(),
             livingArea: $property->getLivingArea(),

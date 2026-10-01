@@ -43,6 +43,7 @@ final class PropertyApiTest extends WebTestCase
         self::assertSame(4, $body['meta']['total']);
         self::assertSame(['city' => 'Berlin', 'maxPrice' => 500000, 'minBedrooms' => 3], $body['meta']['filters']);
         self::assertSame([329000, 459000, 489000, 495000], array_column($body['data'], 'price'));
+        self::assertSame([4062, 5216, 5315, 3587], array_column($body['data'], 'pricePerSquareMetre'));
 
         foreach ($body['data'] as $property) {
             self::assertSame('Berlin', $property['city']);

@@ -15,6 +15,7 @@ export interface PropertySummary {
   city: string
   district: string
   price: number
+  pricePerSquareMetre: number
   bedrooms: number
   bathrooms: number
   livingArea: number
@@ -25,7 +26,6 @@ export interface PropertySummary {
 export interface PropertyDetails extends Omit<PropertySummary, 'imageUrl'> {
   description: string
   address: string
-  pricePerSquareMetre: number
   yearBuilt: number | null
   features: string[]
   images: string[]

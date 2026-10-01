@@ -10,6 +10,7 @@ const property: PropertySummary = {
   city: 'Berlin',
   district: 'Neukölln',
   price: 459000,
+  pricePerSquareMetre: 5216,
   bedrooms: 3,
   bathrooms: 1,
   livingArea: 88,
@@ -22,6 +23,7 @@ describe('PropertyCard', () => {
     const wrapper = await mountSuspended(PropertyCard, { props: { property } })
 
     expect(wrapper.text()).toContain('€459,000')
+    expect(wrapper.text()).toContain('€5,216/m²')
     expect(wrapper.text()).toContain('Renovated Altbau apartment in Neukölln')
     expect(wrapper.text()).toContain('Neukölln, Berlin')
     expect(wrapper.text()).toContain('3 bedrooms')

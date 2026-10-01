@@ -131,6 +131,11 @@ class Property
         return $this->livingArea;
     }
 
+    public function getPricePerSquareMetre(): int
+    {
+        return (int) round($this->price / max(1, $this->livingArea));
+    }
+
     public function getYearBuilt(): ?int
     {
         return $this->yearBuilt;

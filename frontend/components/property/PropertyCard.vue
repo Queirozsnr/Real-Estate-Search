@@ -26,9 +26,14 @@ defineProps<{
     </div>
 
     <div class="flex flex-1 flex-col gap-2 p-4">
-      <p class="text-xl font-bold text-highlighted">
-        {{ formatPrice(property.price) }}
-      </p>
+      <div class="flex items-baseline justify-between gap-2">
+        <p class="text-xl font-bold text-highlighted">
+          {{ formatPrice(property.price) }}
+        </p>
+        <p class="text-sm text-muted">
+          {{ formatPrice(property.pricePerSquareMetre) }}/m²
+        </p>
+      </div>
       <h3 class="line-clamp-2 font-medium text-default">
         {{ property.title }}
       </h3>
