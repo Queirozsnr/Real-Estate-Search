@@ -9,7 +9,7 @@ A small application to search and explore real estate listings, made of three pa
 | **MCP Server** | Official MCP PHP SDK via `symfony/mcp-bundle`, running inside the backend | `http://localhost:8000/mcp` (HTTP) or `bin/console mcp:server` (stdio) |
 
 > Example: *"Properties in Berlin with at least 3 bedrooms and a maximum price of €500,000"*
-> - UI: http://localhost:3000/?city=Berlin&minBedrooms=3&maxPrice=500000
+> - UI: type the sentence in the quick search bar, or open http://localhost:3000/?city=Berlin&minBedrooms=3&maxPrice=500000
 > - API: `GET /api/properties?city=Berlin&minBedrooms=3&maxPrice=500000`
 > - MCP: `search_properties({ "city": "Berlin", "minBedrooms": 3, "maxPrice": 500000 })`
 >
@@ -56,9 +56,11 @@ It is available over both MCP transports:
 **Streamable HTTP** (backend container running):
 
 ```bash
-# MCP Inspector
-npx @modelcontextprotocol/inspector
-# → Transport "Streamable HTTP", URL http://localhost:8000/mcp
+# MCP Inspector (v2): Add Servers → Add manually → transport "streamable-http",
+# URL http://localhost:8000/mcp → toggle the server on → "Tools" tab
+npx @modelcontextprotocol/inspector@latest
+# On Windows, if it fails with "listen EACCES" (ports reserved by Hyper-V/Docker), pick other ports:
+#   CLIENT_PORT=7274 SERVER_PORT=7277 npx @modelcontextprotocol/inspector@latest
 
 # Claude Code
 claude mcp add --transport http real-estate http://localhost:8000/mcp
@@ -176,13 +178,15 @@ src/
 ```
 pages/index.vue                  Search: filters + results + pagination, all states handled
 pages/properties/[id].vue        Details: gallery, key facts, features, map; real 404 for unknown ids
-components/search/               SearchFilters (form), SearchResultsHeader (count + sort)
+components/search/               QuickSearch (free text), McpCallPreview, SearchFilters (form),
+                                 SearchResultsHeader (count + sort)
 components/property/             PropertyCard, PropertyGrid, PropertyCardSkeleton, PropertyImage,
                                  PropertyGallery, PropertyFacts, PropertyLocationMap
 components/common/               EmptyState, ErrorState
 composables/usePropertySearch.ts URL query ⇄ filters ⇄ API
 composables/useSearchFacets.ts   Filter options
-utils/                           search-query (parse/serialize), format, api-error
+utils/                           search-query (URL ⇄ filters), quick-search (free text → filters),
+                                 mcp-call (filters → search_properties call), format, api-error
 server/api/[...path].ts          Proxy /api/** → Symfony
 types/property.ts                API contract types
 ```
@@ -202,7 +206,8 @@ The challenge asks whether the MCP server should read the database directly or g
 MCP details:
 - Tool arguments use the **same names as the REST query parameters** (`minPrice`, `minBedrooms`, …), so there is one vocabulary.
 - Arguments are validated **twice, by design**. The SDK checks them against the JSON Schema (types, enums, ranges) and returns JSON-RPC `-32602` on failure. The domain constraints (for example `maxPrice >= minPrice`) come back as **tool errors** (`isError: true`) with a readable message, so the model can correct itself.
-- Results are sent as **`structuredContent`**, plus the same JSON as text content for older clients, as the MCP spec recommends.
+- Results are sent as **`structuredContent`**, plus the same JSON as text content for older clients, as the MCP spec recommends. All three tools declare an **`outputSchema`**, and a test validates real tool results against it so the contract cannot drift.
+- Input schemas are written for **portability across clients**. Optional filters use `anyOf: [{type}, {type: "null"}]` instead of type arrays, because some clients (e.g. Gemini's function-calling dialect) reject type arrays and the MCP Inspector sends empty fields as `null`. They also include `examples` (e.g. `"Berlin"`, `500000`) to guide the model.
 - Results include hints for the model: a `note` when results are truncated or empty, a `url` to the property page, and the tools are annotated as read-only and idempotent.
 - The tools are exposed over **Streamable HTTP and stdio** from the same configuration.
 
@@ -231,7 +236,9 @@ The dataset is a readable JSON file (`backend/data/properties.json`) that is imp
   - A page past the last one gets its own message.
   - An unknown property shows a real 404 page with the correct HTTP status.
   - Broken images fall back to a placeholder.
-- **Filter UX:** selects apply immediately. Price inputs are debounced and validated on the client (min ≤ max), so the API is not called with a range that is known to be invalid. The filters sit in a sidebar on desktop and in a slide-over on mobile, and a "Clear all" button appears when filters are active.
+- **Quick search:** a free-text bar turns sentences like *"apartments in Berlin, at least 3 bedrooms, max €500k"* into filters. It recognizes cities (including German names like "München"), property types, bedrooms, and price limits and ranges. Below it, the UI shows the **equivalent MCP call** (`search_properties({ city: "Berlin", … })`) with a copy button, which makes visible that the UI and the MCP tool are the same search.
+  - The parser is **deterministic and rule-based**, not an LLM. It works offline, needs no API key to evaluate the project and is fully unit-tested. Free-text understanding by a model is exactly what the MCP server enables: an AI client calls `search_properties` itself.
+- **Filter UX:** the city select and the type and bedroom chips apply immediately. Price inputs are debounced and validated on the client (min ≤ max), so the API is not called with a range that is known to be invalid. The filters sit in a sidebar on desktop and in a slide-over on mobile, and a "Clear all" button appears when filters are active.
 - **Components:** pages only compose. Data fetching lives in composables, formatting and URL logic in pure, unit-tested utilities, and presentation in small single-purpose components.
 - **Extras:** dark mode, a location map (OpenStreetMap embed, which needs no API key or extra library), SEO meta per property, and accessibility details (`role="search"`, `aria-busy`, `aria-live`, labelled controls).
 
