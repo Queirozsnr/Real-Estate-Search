@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Property;
 use App\Enum\PropertyType;
+use App\Search\CityMarketStats;
 use App\Search\PropertySearchCriteria;
 use App\Search\PropertySearchResult;
 use App\Search\SearchFacets;
@@ -91,6 +92,47 @@ class PropertyRepository extends ServiceEntityRepository
             minPrice: (int) $ranges['minPrice'],
             maxPrice: (int) $ranges['maxPrice'],
             maxBedrooms: (int) $ranges['maxBedrooms'],
+        );
+    }
+
+    /**
+     * @return list<CityMarketStats> One entry per city, ordered by city name
+     */
+    public function cityMarketStats(?PropertyType $type = null, ?string $city = null): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select(
+                'p.city AS city',
+                'COUNT(p.id) AS listings',
+                'SUM(p.price) AS totalPrice',
+                'SUM(p.livingArea) AS totalLivingArea',
+                'MIN(p.price) AS minPrice',
+                'MAX(p.price) AS maxPrice',
+            )
+            ->groupBy('p.city')
+            ->orderBy('p.city', 'ASC');
+
+        if (null !== $type) {
+            $qb->andWhere('p.type = :type')->setParameter('type', $type->value);
+        }
+
+        if (null !== $city) {
+            $qb->andWhere('LOWER(p.city) = :city')->setParameter('city', mb_strtolower($city));
+        }
+
+        /** @var list<array{city: string, listings: int|string, totalPrice: int|string, totalLivingArea: int|string, minPrice: int|string, maxPrice: int|string}> $rows */
+        $rows = $qb->getQuery()->getArrayResult();
+
+        return array_map(
+            static fn (array $row): CityMarketStats => new CityMarketStats(
+                city: $row['city'],
+                listings: (int) $row['listings'],
+                totalPrice: (int) $row['totalPrice'],
+                totalLivingArea: (int) $row['totalLivingArea'],
+                minPrice: (int) $row['minPrice'],
+                maxPrice: (int) $row['maxPrice'],
+            ),
+            $rows,
         );
     }
 

@@ -7,7 +7,8 @@ mcp:
             instructions: |
                 Use "list_filter_options" to discover the available cities and property types,
                 "search_properties" to find listings matching the user's criteria (all filters are optional and combined with AND),
-                and "get_property" to fetch the full details of a single listing by its id.
+                "get_property" to fetch the full details of a single listing by its id (including how its price
+                per m² compares with its city), and "get_market_overview" for price statistics per city.
                 Prices are purchase prices in EUR.
             transports:
                 # `php bin/console mcp:server` (local MCP clients such as Claude Desktop / Claude Code)

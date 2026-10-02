@@ -101,7 +101,41 @@ final class OutputSchemas
                 'properties' => ['latitude' => ['type' => 'number'], 'longitude' => ['type' => 'number']],
                 'required' => ['latitude', 'longitude'],
             ],
+            'market' => [
+                'type' => 'object',
+                'description' => 'Price per m² compared with the average of the city',
+                'properties' => [
+                    'city' => ['type' => 'string'],
+                    'listings' => ['type' => 'integer', 'description' => 'Listings in the city used for the average'],
+                    'averagePricePerSquareMetre' => ['type' => 'integer', 'description' => 'City average in EUR per m² (total price / total living area)'],
+                    'differencePercent' => ['type' => 'integer', 'description' => 'Negative: cheaper per m² than the city average'],
+                ],
+                'required' => ['city', 'listings', 'averagePricePerSquareMetre', 'differencePercent'],
+            ],
         ],
-        'required' => ['id', 'title', 'description', 'type', 'city', 'district', 'address', 'price', 'pricePerSquareMetre', 'bedrooms', 'bathrooms', 'livingArea', 'yearBuilt', 'features', 'images', 'location', 'listedAt', 'url'],
+        'required' => ['id', 'title', 'description', 'type', 'city', 'district', 'address', 'price', 'pricePerSquareMetre', 'bedrooms', 'bathrooms', 'livingArea', 'yearBuilt', 'features', 'images', 'location', 'market', 'listedAt', 'url'],
+    ];
+
+    public const array GET_MARKET_OVERVIEW = [
+        'type' => 'object',
+        'properties' => [
+            'type' => self::NULLABLE_STRING + ['description' => 'Property type the statistics are restricted to, null for all types'],
+            'cities' => [
+                'type' => 'array',
+                'items' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'city' => ['type' => 'string'],
+                        'listings' => ['type' => 'integer'],
+                        'averagePricePerSquareMetre' => ['type' => 'integer', 'description' => 'EUR per m² (total price / total living area)'],
+                        'averagePrice' => ['type' => 'integer', 'description' => 'EUR'],
+                        'minPrice' => ['type' => 'integer', 'description' => 'EUR'],
+                        'maxPrice' => ['type' => 'integer', 'description' => 'EUR'],
+                    ],
+                    'required' => ['city', 'listings', 'averagePricePerSquareMetre', 'averagePrice', 'minPrice', 'maxPrice'],
+                ],
+            ],
+        ],
+        'required' => ['type', 'cities'],
     ];
 }

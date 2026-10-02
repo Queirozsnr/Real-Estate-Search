@@ -30,6 +30,16 @@ export interface PropertyDetails extends Omit<PropertySummary, 'imageUrl'> {
   features: string[]
   images: string[]
   location: { latitude: number, longitude: number }
+  market: MarketComparison
+}
+
+/** Price per m² of a property compared with the average of its city. */
+export interface MarketComparison {
+  city: string
+  listings: number
+  averagePricePerSquareMetre: number
+  /** Negative when the property is cheaper per m² than the city average. */
+  differencePercent: number
 }
 
 export interface PaginationMeta {

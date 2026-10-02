@@ -48,7 +48,7 @@ final class McpHttpEndpointTest extends WebTestCase
 
         $names = array_column($response['result']['tools'], 'name');
         sort($names);
-        self::assertSame(['get_property', 'list_filter_options', 'search_properties'], $names);
+        self::assertSame(['get_market_overview', 'get_property', 'list_filter_options', 'search_properties'], $names);
     }
 
     public function testCallsSearchPropertiesWithStructuredContent(): void
@@ -88,6 +88,7 @@ final class McpHttpEndpointTest extends WebTestCase
         }
 
         self::assertSame(PropertyType::values(), $properties['type']['anyOf'][0]['enum']);
+        self::assertSame(PropertyType::values(), $tools['get_market_overview']['inputSchema']['properties']['type']['anyOf'][0]['enum']);
     }
 
     public function testStructuredContentMatchesTheDeclaredOutputSchemas(): void
@@ -101,6 +102,8 @@ final class McpHttpEndpointTest extends WebTestCase
             ['search_properties', ['city' => 'Paris']],
             ['get_property', ['id' => 5]],
             ['list_filter_options', []],
+            ['get_market_overview', []],
+            ['get_market_overview', ['type' => 'house']],
         ];
 
         foreach ($calls as [$name, $arguments]) {

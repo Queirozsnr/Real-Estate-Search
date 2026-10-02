@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Mcp;
 
 use App\Enum\PropertySort;
+use App\Enum\PropertyType;
+use App\Mcp\GetMarketOverviewTool;
 use App\Mcp\GetPropertyTool;
 use App\Mcp\ListFilterOptionsTool;
 use App\Mcp\SearchPropertiesTool;
@@ -66,6 +68,27 @@ final class McpToolsTest extends KernelTestCase
         self::assertSame('house', $result['type']);
         self::assertNotEmpty($result['description']);
         self::assertStringEndsWith('/properties/2', $result['url']);
+        // 1,250,000 EUR / 180 m² = 6,944 EUR/m², 13% above the Berlin average of 6,147 EUR/m².
+        self::assertSame(13, $result['market']['differencePercent']);
+    }
+
+    public function testGetMarketOverviewForAllTypes(): void
+    {
+        $result = self::getContainer()->get(GetMarketOverviewTool::class)();
+
+        self::assertNull($result['type']);
+        self::assertSame(['Berlin', 'Cologne', 'Frankfurt', 'Hamburg', 'Munich'], array_column($result['cities'], 'city'));
+        self::assertSame(6147, $result['cities'][0]['averagePricePerSquareMetre']);
+    }
+
+    public function testGetMarketOverviewForOneType(): void
+    {
+        $result = self::getContainer()->get(GetMarketOverviewTool::class)(type: PropertyType::House);
+
+        // Only cities with at least one house; Berlin's only house is 1,250,000 EUR / 180 m².
+        self::assertSame('house', $result['type']);
+        self::assertSame(['Berlin', 'Cologne', 'Hamburg', 'Munich'], array_column($result['cities'], 'city'));
+        self::assertSame(6944, $result['cities'][0]['averagePricePerSquareMetre']);
     }
 
     public function testGetPropertyReportsUnknownIdAsToolError(): void

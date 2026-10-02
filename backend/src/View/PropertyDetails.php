@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\View;
 
 use App\Entity\Property;
+use App\Search\MarketComparison;
 
 final readonly class PropertyDetails
 {
     /**
-     * @param list<string>                              $features
-     * @param list<string>                              $images
-     * @param array{latitude: float, longitude: float} $location
+     * @param list<string>                                                                                 $features
+     * @param list<string>                                                                                 $images
+     * @param array{latitude: float, longitude: float}                                                    $location
+     * @param array{city: string, listings: int, averagePricePerSquareMetre: int, differencePercent: int} $market
      */
     public function __construct(
         public int $id,
@@ -30,11 +32,12 @@ final readonly class PropertyDetails
         public array $features,
         public array $images,
         public array $location,
+        public array $market,
         public string $listedAt,
     ) {
     }
 
-    public static function fromEntity(Property $property): self
+    public static function fromEntity(Property $property, MarketComparison $market): self
     {
         return new self(
             id: (int) $property->getId(),
@@ -53,6 +56,12 @@ final readonly class PropertyDetails
             features: $property->getFeatures(),
             images: $property->getImages(),
             location: ['latitude' => $property->getLatitude(), 'longitude' => $property->getLongitude()],
+            market: [
+                'city' => $market->city,
+                'listings' => $market->listings,
+                'averagePricePerSquareMetre' => (int) round($market->cityAveragePricePerSquareMetre),
+                'differencePercent' => $market->differencePercent(),
+            ],
             listedAt: $property->getListedAt()->format('Y-m-d'),
         );
     }

@@ -27,7 +27,7 @@ final readonly class GetPropertyTool
     #[McpTool(
         name: 'get_property',
         title: 'Get property details',
-        description: 'Get the full details of a single property (description, address, features, images, location, price per m²) by its id, as returned by search_properties.',
+        description: 'Get the full details of a single property (description, address, features, images, location, price per m²) by its id, as returned by search_properties. Includes "market": how its price per m² compares with the average of its city (negative differencePercent = cheaper than average).',
         annotations: new ToolAnnotations(readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false),
         outputSchema: OutputSchemas::GET_PROPERTY,
     )]
@@ -43,7 +43,7 @@ final readonly class GetPropertyTool
         }
 
         return [
-            ...get_object_vars(PropertyDetails::fromEntity($property)),
+            ...get_object_vars(PropertyDetails::fromEntity($property, $this->catalog->marketComparison($property))),
             'url' => $this->urlGenerator->propertyUrl($id),
         ];
     }

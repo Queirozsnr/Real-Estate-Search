@@ -128,6 +128,8 @@ function backToResults() {
               </p>
             </div>
 
+            <PriceComparison :market="property.market" />
+
             <UButton
               :to="`mailto:agent@example.com?subject=${encodeURIComponent(`Enquiry: ${property.title}`)}`"
               label="Contact agent"

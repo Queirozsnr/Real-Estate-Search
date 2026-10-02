@@ -128,6 +128,49 @@ final class PropertyApiTest extends WebTestCase
         self::assertArrayHasKey('latitude', $body['data']['location']);
     }
 
+    public function testComparesThePricePerSquareMetreWithTheCityAverage(): void
+    {
+        $body = $this->getJson('/api/properties/1');
+
+        // Berlin: 9 listings, 5,821,000 EUR over 947 m² = 6,147 EUR/m²; this one is 5,315 EUR/m².
+        self::assertSame(
+            ['city' => 'Berlin', 'listings' => 9, 'averagePricePerSquareMetre' => 6147, 'differencePercent' => -14],
+            $body['data']['market'],
+        );
+    }
+
+    public function testExposesMarketStatisticsPerCity(): void
+    {
+        $body = $this->getJson('/api/properties/market');
+
+        self::assertResponseIsSuccessful();
+        self::assertSame(['Berlin', 'Cologne', 'Frankfurt', 'Hamburg', 'Munich'], array_column($body['data'], 'city'));
+        self::assertSame(27, array_sum(array_column($body['data'], 'listings')));
+        self::assertSame(
+            ['city' => 'Berlin', 'listings' => 9, 'averagePricePerSquareMetre' => 6147, 'averagePrice' => 646778, 'minPrice' => 215000, 'maxPrice' => 1480000],
+            $body['data'][0],
+        );
+    }
+
+    public function testRestrictsMarketStatisticsToOneType(): void
+    {
+        $body = $this->getJson('/api/properties/market?type=apartment');
+
+        // Berlin apartments: 2,381,000 EUR over 450 m².
+        self::assertSame('apartment', $body['meta']['type']);
+        self::assertSame(5, $body['data'][0]['listings']);
+        self::assertSame(5291, $body['data'][0]['averagePricePerSquareMetre']);
+    }
+
+    public function testRejectsAnUnknownTypeForMarketStatistics(): void
+    {
+        $body = $this->getJson('/api/properties/market?type=castle');
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertResponseHeaderSame('Content-Type', 'application/problem+json');
+        self::assertStringContainsString('Allowed values: "apartment", "house"', $body['detail']);
+    }
+
     public function testUnknownPropertyReturnsNotFoundProblem(): void
     {
         $body = $this->getJson('/api/properties/999');
