@@ -8,6 +8,7 @@ use App\Enum\PropertyType;
 use App\Tests\SeededDatabaseTrait;
 use Opis\JsonSchema\Errors\ErrorFormatter;
 use Opis\JsonSchema\Validator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -63,6 +64,35 @@ final class McpHttpEndpointTest extends WebTestCase
         self::assertSame(4, $result['structuredContent']['total']);
         // Backwards compatible text content carries the same JSON payload.
         self::assertSame($result['structuredContent'], json_decode($result['content'][0]['text'], true));
+    }
+
+    /**
+     * The challenge requirement: the same search must be available through the API and through
+     * search_properties, with the same results.
+     *
+     * @param array<string, int|string> $filters
+     */
+    #[DataProvider('searches')]
+    public function testSearchPropertiesReturnsTheSameResultsAsTheRestApi(array $filters): void
+    {
+        $this->client->request('GET', '/api/properties?'.http_build_query($filters + ['perPage' => 50]));
+        $api = json_decode((string) $this->client->getResponse()->getContent(), true, flags: \JSON_THROW_ON_ERROR);
+
+        $mcp = $this->rpc('tools/call', ['name' => 'search_properties', 'arguments' => $filters + ['limit' => 50]]);
+
+        self::assertNotEmpty($api['data']);
+        self::assertSame(array_column($api['data'], 'id'), array_column($mcp['result']['structuredContent']['properties'], 'id'));
+        self::assertSame($api['meta']['total'], $mcp['result']['structuredContent']['total']);
+    }
+
+    /**
+     * @return iterable<string, array{array<string, int|string>}>
+     */
+    public static function searches(): iterable
+    {
+        yield 'challenge example' => [['city' => 'Berlin', 'minBedrooms' => 3, 'maxPrice' => 500000]];
+        yield 'type and price range, cheapest first' => [['type' => 'apartment', 'minPrice' => 400000, 'maxPrice' => 1000000, 'sort' => 'price_asc']];
+        yield 'no filters, largest first' => [['sort' => 'area_desc']];
     }
 
     public function testOptionalFiltersAcceptNull(): void

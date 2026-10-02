@@ -50,17 +50,12 @@ const isPastLastPage = computed(() => !!data.value && data.value.meta.total > 0 
       </p>
     </div>
 
-    <div class="mb-8 space-y-2">
-      <QuickSearch
-        :filters="filters"
-        :cities="cityNames"
-        @search="applyQuickSearch"
-      />
-      <McpCallPreview
-        v-if="activeFilterCount > 0"
-        :filters="filters"
-      />
-    </div>
+    <QuickSearch
+      :filters="filters"
+      :cities="cityNames"
+      class="mb-8"
+      @search="applyQuickSearch"
+    />
 
     <div class="grid gap-8 lg:grid-cols-[17rem_1fr]">
       <!-- Desktop: persistent sidebar -->
