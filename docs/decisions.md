@@ -153,7 +153,7 @@ placeholder if one fails to load.
 - **Components.** Pages only compose. Data fetching lives in composables, URL and formatting logic in
   pure, unit-tested utilities, and presentation in small components that receive props and emit
   events, so the same filter form is reused in the desktop sidebar and the mobile slide-over.
-- **Extras:** light/dark mode, SEO meta per property, and accessibility details (`role="search"`,
+- **Extras:** light theme by default with a dark mode toggle (the choice is remembered), SEO meta per property, and accessibility details (`role="search"`,
   `aria-busy`, `aria-live`, labelled radio groups).
 
 ## 5. Testing
