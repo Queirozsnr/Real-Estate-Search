@@ -124,7 +124,7 @@ final class PropertyApiTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSame('Bright family apartment near Mauerpark', $body['data']['title']);
         self::assertSame(5315, $body['data']['pricePerSquareMetre']); // 489000 / 92
-        self::assertCount(3, $body['data']['images']);
+        self::assertCount(8, $body['data']['images']);
         self::assertArrayHasKey('latitude', $body['data']['location']);
     }
 
