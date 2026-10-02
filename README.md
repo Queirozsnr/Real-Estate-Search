@@ -109,7 +109,9 @@ More detail on each decision: [docs/decisions.md](docs/decisions.md).
 
 ## Next steps
 
+I kept the scope to what a 4–6 hour challenge asks for. With more time, I would add:
+
 - Location search via geocoding (districts, postcodes, "München" / "Munich")
 - OpenAPI description with generated frontend types
 - End-to-end tests and CI
-- OAuth on the MCP endpoint before exposing it publicly
+- OAuth on the MCP endpoint before exposing it publicly (authentication was left out on purpose: the search is public)
