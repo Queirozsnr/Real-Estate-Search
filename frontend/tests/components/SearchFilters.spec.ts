@@ -33,15 +33,24 @@ describe('SearchFilters', () => {
     expect(wrapper.emitted('apply')).toEqual([[{ minBedrooms: undefined }]])
   })
 
-  it('offers "Clear all" only when filters are active', async () => {
+  it('enables "Reset" only when filters are active', async () => {
     const withoutFilters = await mountSuspended(SearchFilters, { props: { filters: { sort: 'newest', page: 1 } } })
-    expect(withoutFilters.text()).not.toContain('Clear all')
+    const disabledReset = withoutFilters.findAll('button').find(button => button.text() === 'Reset')
+    expect(disabledReset!.attributes('disabled')).toBeDefined()
 
     const withFilters = await mountSuspended(SearchFilters, { props: { filters: { sort: 'newest', page: 1, city: 'Berlin' } } })
-    const clear = withFilters.findAll('button').find(button => button.text() === 'Clear all')
-    await clear!.trigger('click')
+    const reset = withFilters.findAll('button').find(button => button.text() === 'Reset')
+    await reset!.trigger('click')
 
     expect(withFilters.emitted('reset')).toHaveLength(1)
+  })
+
+  it('clears the city', async () => {
+    const wrapper = await mountSuspended(SearchFilters, { props: { filters: { sort: 'newest', page: 1, city: 'Berlin' } } })
+
+    await wrapper.find('button[aria-label="Clear city"]').trigger('click')
+
+    expect(wrapper.emitted('apply')).toEqual([[{ city: undefined }]])
   })
 
   it('shows a validation error and does not apply an inverted price range', async () => {

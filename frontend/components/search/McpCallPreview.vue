@@ -12,19 +12,19 @@ const { copy, copied, isSupported } = useClipboard({ copiedDuring: 1500 })
 </script>
 
 <template>
-  <div class="flex min-w-0 items-center gap-2 text-xs text-muted">
-    <span class="shrink-0">Same search via MCP:</span>
-    <code
-      class="min-w-0 truncate rounded bg-elevated px-2 py-1 font-mono text-default"
-      :title="call"
-    >{{ call }}</code>
+  <div
+    class="group flex min-w-0 items-center gap-1 font-mono text-xs text-muted"
+    title="The same search as an MCP tool call"
+  >
+    <code class="min-w-0 truncate">{{ call }}</code>
     <UButton
       v-if="isSupported"
       :icon="copied ? 'i-lucide-check' : 'i-lucide-copy'"
       :aria-label="copied ? 'Copied' : 'Copy MCP call'"
       color="neutral"
-      variant="ghost"
+      variant="link"
       size="xs"
+      class="shrink-0 opacity-60 group-hover:opacity-100"
       @click="copy(call)"
     />
   </div>

@@ -50,7 +50,7 @@ const isPastLastPage = computed(() => !!data.value && data.value.meta.total > 0 
       </p>
     </div>
 
-    <div class="mb-8 space-y-3">
+    <div class="mb-8 space-y-2">
       <QuickSearch
         :filters="filters"
         :cities="cityNames"
@@ -65,7 +65,7 @@ const isPastLastPage = computed(() => !!data.value && data.value.meta.total > 0 
     <div class="grid gap-8 lg:grid-cols-[17rem_1fr]">
       <!-- Desktop: persistent sidebar -->
       <aside class="hidden lg:block">
-        <div class="sticky top-24 rounded-xl border border-default p-5">
+        <div class="sticky top-24 rounded-xl border border-default bg-elevated/40 p-5">
           <SearchFilters
             :filters="filters"
             :facets="facets"

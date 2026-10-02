@@ -44,20 +44,25 @@ watch(() => props.filters, (filters) => {
     aria-label="Quick search"
     @submit.prevent="submit"
   >
-    <div class="flex gap-2">
+    <div class="flex items-center gap-2 rounded-xl border border-default bg-elevated/40 py-1.5 pl-4 pr-1.5 transition-colors focus-within:border-primary">
+      <UIcon
+        name="i-lucide-sparkles"
+        class="size-4 shrink-0 text-primary"
+      />
       <UInput
         v-model="query"
-        icon="i-lucide-sparkles"
-        size="xl"
+        variant="none"
+        size="lg"
         placeholder="Try: apartments in Berlin, 3+ bedrooms, max €500k"
         aria-label="Describe what you are looking for"
-        class="flex-1"
+        class="min-w-0 flex-1"
+        :ui="{ base: 'px-0' }"
         @update:model-value="notUnderstood = false"
       />
       <UButton
         type="submit"
         label="Search"
-        size="xl"
+        size="lg"
       />
     </div>
     <p

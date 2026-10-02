@@ -19,31 +19,28 @@ const emit = defineEmits<{
   reset: []
 }>()
 
-// Select items cannot have an empty value, so "no filter" is represented by a sentinel.
-const ANY = 'any'
 const BEDROOM_OPTIONS = [0, 1, 2, 3, 4, 5] as const
 const PRICE_STEP = 25_000
-const priceFormat: Intl.NumberFormatOptions = { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }
+const priceFormat: Intl.NumberFormatOptions = { maximumFractionDigits: 0 }
 
-const cityItems = computed(() => {
-  const cities = (props.facets?.cities ?? []).map(city => ({ label: `${city.name} (${city.count})`, value: city.name }))
-  const current = props.filters.city
+// Typing suggests the cities of the dataset; any other text can still be searched.
+const cityNames = computed(() => props.facets?.cities.map(city => city.name) ?? [])
+const cityCounts = computed(() => new Map(props.facets?.cities.map(city => [city.name, city.count]) ?? []))
 
-  // Keep a city coming from the URL selectable even if it is not part of the dataset.
-  if (current && !cities.some(city => city.value.toLowerCase() === current.toLowerCase())) {
-    cities.push({ label: current, value: current })
-  }
-
-  return [{ label: 'All cities', value: ANY }, ...cities]
-})
-
-const selectedCity = computed<string>({
+const selectedCity = computed<string | undefined>({
   get: () => {
-    const current = props.filters.city?.toLowerCase()
-    return cityItems.value.find(item => item.value !== ANY && item.value.toLowerCase() === current)?.value ?? ANY
+    const current = props.filters.city
+    return cityNames.value.find(name => name.toLowerCase() === current?.toLowerCase()) ?? current
   },
-  set: value => emit('apply', { city: value === ANY ? undefined : value }),
+  set: value => emit('apply', { city: value || undefined }),
 })
+
+function searchTypedCity(term: string) {
+  const city = term.trim()
+  if (city) {
+    emit('apply', { city })
+  }
+}
 
 const typeOptions = computed(() => [
   { label: 'All', value: undefined, count: undefined },
@@ -92,6 +89,8 @@ const applyPrice = useDebounceFn(() => {
 watch([minPrice, maxPrice], applyPrice)
 
 const activeFilterCount = computed(() => countActiveFilters(props.filters))
+
+const priceInputUi = { increment: 'hidden', decrement: 'hidden', base: 'px-2.5 text-left' }
 </script>
 
 <template>
@@ -101,10 +100,7 @@ const activeFilterCount = computed(() => countActiveFilters(props.filters))
     class="space-y-6"
     @submit.prevent="applyPrice"
   >
-    <div
-      v-if="showTitle || activeFilterCount > 0"
-      class="flex items-center justify-between"
-    >
+    <div class="flex items-center justify-between">
       <h2
         v-if="showTitle"
         class="font-semibold text-highlighted"
@@ -112,12 +108,12 @@ const activeFilterCount = computed(() => countActiveFilters(props.filters))
         Filters
       </h2>
       <UButton
-        v-if="activeFilterCount > 0"
-        label="Clear all"
-        icon="i-lucide-x"
-        color="neutral"
+        label="Reset"
+        color="primary"
         variant="link"
         size="sm"
+        class="ml-auto px-0"
+        :disabled="activeFilterCount === 0"
         @click="emit('reset')"
       />
     </div>
@@ -126,12 +122,39 @@ const activeFilterCount = computed(() => countActiveFilters(props.filters))
       label="City"
       name="city"
     >
-      <USelect
+      <template
+        v-if="filters.city"
+        #hint
+      >
+        <UButton
+          label="Clear"
+          color="neutral"
+          variant="link"
+          size="xs"
+          class="px-0"
+          aria-label="Clear city"
+          @click="selectedCity = undefined"
+        />
+      </template>
+      <UInputMenu
         v-model="selectedCity"
-        :items="cityItems"
-        icon="i-lucide-map-pin"
+        :items="cityNames"
+        icon="i-lucide-search"
+        trailing-icon=""
+        placeholder="All cities"
+        open-on-click
+        create-item
         class="w-full"
-      />
+        aria-label="City"
+        @create="searchTypedCity"
+      >
+        <template #item-trailing="{ item }">
+          <span class="text-xs text-dimmed">{{ cityCounts.get(String(item)) }}</span>
+        </template>
+        <template #create-item-label="{ item }">
+          Search "{{ item }}"
+        </template>
+      </UInputMenu>
     </UFormField>
 
     <UFormField
@@ -146,20 +169,16 @@ const activeFilterCount = computed(() => countActiveFilters(props.filters))
         <UButton
           v-for="option in typeOptions"
           :key="option.label"
+          :label="option.label"
+          :title="option.count === undefined ? undefined : `${option.count} listings`"
           :color="filters.type === option.value ? 'primary' : 'neutral'"
           :variant="filters.type === option.value ? 'solid' : 'outline'"
           role="radio"
           :aria-checked="filters.type === option.value"
           size="sm"
-          class="rounded-full"
+          class="rounded-full px-3"
           @click="selectType(option.value)"
-        >
-          {{ option.label }}
-          <span
-            v-if="option.count !== undefined"
-            class="opacity-60"
-          >{{ option.count }}</span>
-        </UButton>
+        />
       </div>
     </UFormField>
 
@@ -189,26 +208,28 @@ const activeFilterCount = computed(() => countActiveFilters(props.filters))
     </UFormField>
 
     <UFormField
-      label="Price"
+      label="Price (€)"
       name="price"
       :error="priceError"
     >
-      <div class="grid gap-2">
+      <div class="grid grid-cols-2 gap-2">
         <UInputNumber
           v-model="minPrice"
           :min="0"
           :step="PRICE_STEP"
           :format-options="priceFormat"
+          :ui="priceInputUi"
           placeholder="No min"
-          aria-label="Minimum price"
+          aria-label="Minimum price in EUR"
         />
         <UInputNumber
           v-model="maxPrice"
           :min="0"
           :step="PRICE_STEP"
           :format-options="priceFormat"
+          :ui="priceInputUi"
           placeholder="No max"
-          aria-label="Maximum price"
+          aria-label="Maximum price in EUR"
         />
       </div>
       <template
