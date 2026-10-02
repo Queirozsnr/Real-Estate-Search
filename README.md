@@ -25,7 +25,7 @@ docker compose up --build
 |---|---|
 | Frontend | http://localhost:3000 |
 | REST API | http://localhost:8000/api/properties |
-| MCP server | http://localhost:8000/mcp |
+| MCP server | `http://localhost:8000/mcp` (endpoint for MCP clients, not a web page; see [MCP server](#mcp-server)) |
 
 On first start the backend creates the SQLite database and imports the dataset (27 properties).
 
