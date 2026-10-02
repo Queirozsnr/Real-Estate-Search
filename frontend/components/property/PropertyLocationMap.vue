@@ -22,7 +22,7 @@ const fullMapUrl = computed(() => `https://www.openstreetmap.org/?mlat=${props.l
     <iframe
       :src="embedUrl"
       :title="`Map showing ${label}`"
-      class="aspect-[16/9] w-full"
+      class="h-80 w-full md:h-[26rem]"
       loading="lazy"
       referrerpolicy="no-referrer"
     />

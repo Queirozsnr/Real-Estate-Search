@@ -27,10 +27,6 @@ export function formatBedrooms(count: number): string {
   return count === 1 ? '1 bedroom' : `${count} bedrooms`
 }
 
-export function formatBathrooms(count: number): string {
-  return count === 1 ? '1 bathroom' : `${count} bathrooms`
-}
-
 const TYPE_LABELS: Record<PropertyType, string> = {
   apartment: 'Apartment',
   house: 'House',
