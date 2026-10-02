@@ -14,7 +14,7 @@
         <span>Real Estate Search</span>
       </NuxtLink>
 
-      <UColorModeButton />
+      <ColorModeToggle />
     </UContainer>
   </header>
 </template>
