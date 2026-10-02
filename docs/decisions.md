@@ -94,6 +94,9 @@ checked to exist and to show homes; the frontend falls back to a placeholder if 
 - **Every state is handled:** skeletons, dimmed results while refetching, errors with a retry, empty
   results, a page past the last one, a real 404 page, and image placeholders (including images that
   fail before hydration).
+- **Images load on demand:** every photo uses `loading="lazy"`, except the main gallery photo at the
+  top of the property page, which loads eagerly so the visible part of the page is not delayed. The
+  map iframe at the bottom of the page is lazy as well.
 - **Quick search is rule-based, not an LLM:** it works offline, needs no API key and is unit-tested.
   Understanding free text is the MCP server's job.
 - **Components:** pages only compose; composables hold data fetching; URL and formatting logic are
