@@ -1,259 +1,115 @@
 # Real Estate Search Assistant
 
-A small application to search and explore real estate listings, made of three parts:
+A small app to search real estate listings, with a **Nuxt 3** frontend, a **Symfony 7.4** REST API
+and an **MCP server**. All three run the same search code, so the challenge example returns the
+same 4 properties everywhere:
 
-| Part | Stack | URL (Docker) |
-|---|---|---|
-| **Frontend** | Nuxt 3 · Vue 3 · TypeScript (strict) · Nuxt UI 3 | http://localhost:3000 |
-| **Backend (REST API)** | Symfony 7.4 LTS · PHP 8.4 · Doctrine · SQLite | http://localhost:8000/api/properties |
-| **MCP Server** | Official MCP PHP SDK via `symfony/mcp-bundle`, running inside the backend | `http://localhost:8000/mcp` (HTTP) or `bin/console mcp:server` (stdio) |
-
-> Example: *"Properties in Berlin with at least 3 bedrooms and a maximum price of €500,000"*
-> - UI: type the sentence in the quick search bar, or open http://localhost:3000/?city=Berlin&minBedrooms=3&maxPrice=500000
-> - API: `GET /api/properties?city=Berlin&minBedrooms=3&maxPrice=500000`
-> - MCP: `search_properties({ "city": "Berlin", "minBedrooms": 3, "maxPrice": 500000 })`
+> *"Properties in Berlin with at least 3 bedrooms and a maximum price of €500,000"*
 >
-> All three return the same 4 properties, because they run through the same code.
+> - **UI:** http://localhost:3000/?city=Berlin&minBedrooms=3&maxPrice=500000 (or type the sentence in the search bar)
+> - **API:** `GET /api/properties?city=Berlin&minBedrooms=3&maxPrice=500000`
+> - **MCP:** `search_properties({ "city": "Berlin", "minBedrooms": 3, "maxPrice": 500000 })`
 
----
+![Search results for the challenge example](docs/screenshots/search.png)
+![Property details page](docs/screenshots/details.png)
 
-## Quick start (Docker)
+## Getting started
 
-Requirements: Docker with Docker Compose.
+Requires Docker.
 
 ```bash
 docker compose up --build
 ```
 
-On the first start the backend runs the database migration and imports the dataset (`backend/data/properties.json`, 27 properties) into SQLite. Nothing else needs to be installed.
+| | URL |
+|---|---|
+| Frontend | http://localhost:3000 |
+| REST API | http://localhost:8000/api/properties |
+| MCP server | http://localhost:8000/mcp |
 
-- Frontend: http://localhost:3000
-- API: http://localhost:8000/api/properties
-- MCP (Streamable HTTP): http://localhost:8000/mcp
-
-### Running the tests
+On first start the backend creates the SQLite database and imports the dataset (27 properties).
 
 ```bash
-# Backend: API, MCP tools and MCP HTTP endpoint (PHPUnit)
-docker compose exec backend composer test
-
-# Frontend: utilities and components (Vitest + @nuxt/test-utils), and strict type checking
-cd frontend && npm ci && npm test && npm run typecheck
+# Tests
+docker compose exec backend composer test   # API, MCP tools, API/MCP parity
+cd frontend && npm ci && npm test           # utilities and components
 ```
 
-## Using the MCP server
-
-The MCP server exposes three tools:
-
-| Tool | Description |
-|---|---|
-| `search_properties` | Search with optional filters `city`, `minPrice`, `maxPrice`, `minBedrooms`, `type`, `sort`, `limit`. Returns the total count plus summaries with links to the frontend. |
-| `get_property` | Full details of one property by `id` (description, address, features, images, location, price per m²). |
-| `list_filter_options` | Available cities and types (with counts), the price range and the sort options, so the model can check valid values before searching. |
-
-It is available over both MCP transports:
-
-**Streamable HTTP** (backend container running):
+<details>
+<summary>Without Docker (PHP 8.4, Composer, Node 22)</summary>
 
 ```bash
-# MCP Inspector (v2): Add Servers → Add manually → transport "streamable-http",
-# URL http://localhost:8000/mcp → toggle the server on → "Tools" tab
-npx @modelcontextprotocol/inspector@latest
-# On Windows, if it fails with "listen EACCES" (ports reserved by Hyper-V/Docker), pick other ports:
-#   CLIENT_PORT=7274 SERVER_PORT=7277 npx @modelcontextprotocol/inspector@latest
+cd backend && composer install
+php bin/console doctrine:migrations:migrate -n && php bin/console app:properties:import
+php -S localhost:8000 -t public     # API on :8000, MCP over HTTP at /mcp
+php bin/console mcp:server          # MCP over stdio
 
+cd frontend && npm install && npm run dev
+```
+</details>
+
+## MCP server
+
+| Tool | What it does |
+|---|---|
+| `search_properties` | Search with optional `city`, `minPrice`, `maxPrice`, `minBedrooms`, `type`, `sort`, `limit` |
+| `get_property` | Full details of one property, including its price per m² compared with the city average |
+| `list_filter_options` | Valid cities and types, price range and sort options |
+| `get_market_overview` | Price statistics per city (average €/m², price range), optionally for one type |
+
+Connect a client while the backend is running:
+
+```bash
 # Claude Code
 claude mcp add --transport http real-estate http://localhost:8000/mcp
+
+# MCP Inspector: Add Servers → Add manually → streamable-http → http://localhost:8000/mcp
+npx @modelcontextprotocol/inspector@latest
+# (Windows "listen EACCES"? prefix with CLIENT_PORT=7274 SERVER_PORT=7277)
+
+# stdio clients (e.g. Claude Desktop) use this command:
+docker compose exec -T backend php bin/console mcp:server
 ```
 
-**stdio** (e.g. Claude Desktop, `claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "real-estate": {
-      "command": "docker",
-      "args": ["compose", "-f", "/absolute/path/to/repo/compose.yaml", "exec", "-T", "backend", "php", "bin/console", "mcp:server"]
-    }
-  }
-}
-```
-
-Quick smoke test from a terminal without any MCP client:
-
-```bash
-curl -s http://localhost:8000/mcp -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
-  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"curl","version":"1"}}}'
-```
-
-## Running without Docker
-
-Requirements: PHP 8.4 (with `pdo_sqlite`), Composer, Node.js 22+.
-
-```bash
-# Backend: http://localhost:8000
-cd backend
-composer install
-php bin/console doctrine:migrations:migrate -n
-php bin/console app:properties:import
-php -S localhost:8000 -t public     # or: symfony serve --port=8000
-
-# MCP over stdio (the HTTP endpoint is served by the backend above)
-php bin/console mcp:server
-
-# Frontend: http://localhost:3000 (proxies /api to http://localhost:8000 by default)
-cd frontend
-npm install
-npm run dev
-```
-
----
+![search_properties in the MCP Inspector](docs/screenshots/mcp-inspector.png)
 
 ## Architecture
 
 ```
-                         ┌──────────────────────────── backend (Symfony) ────────────────────────────┐
- Browser                 │                                                                           │
-   │                     │   HTTP adapter                     MCP adapter                            │
-   ▼                     │   PropertyController               SearchPropertiesTool / GetPropertyTool │
-┌─────────────┐  /api/** │   #[MapQueryString] + 422          ListFilterOptionsTool                  │
-│ Nuxt (SSR)  │─────────▶│   RFC 9457 problem+json            JSON Schema + isError results          │
-│ + /api      │  proxy   │            │                                   │                          │
-│   proxy     │          │            └──────────────┬────────────────────┘                          │
-└─────────────┘          │                           ▼                                               │
-                         │     PropertySearchCriteria (DTO + validation rules, shared)               │
- MCP clients             │     PropertyCatalog (application service: search / get / facets)          │
- (Claude, Inspector) ───▶│                           │                                               │
-   /mcp (HTTP) or stdio  │                           ▼                                               │
-                         │     PropertyRepository (Doctrine QueryBuilder) ──▶ SQLite                 │
-                         └───────────────────────────────────────────────────────────────────────────┘
+Nuxt (SSR) ── /api proxy ──▶ ┌──────────────── Symfony ────────────────┐ ◀── MCP clients
+                             │  PropertyController      MCP tools      │     (/mcp or stdio)
+                             │          └──── PropertyCatalog ───┘      │
+                             │                PropertyRepository ──────┼──▶ SQLite
+                             └─────────────────────────────────────────┘
 ```
 
-### Backend (`backend/`)
+The REST controller and the MCP tools are thin adapters over one application service
+(`PropertyCatalog`) and one validated search object (`PropertySearchCriteria`). The browser only
+talks to the Nuxt server, which proxies `/api` to Symfony.
 
-```
-src/
-├── Controller/PropertyController.php       REST endpoints (thin: map request → catalog → view)
-├── Mcp/                                    MCP tools (thin: map arguments → catalog → view)
-├── Search/
-│   ├── PropertySearchCriteria.php          Filters + validation constraints (used by REST and MCP)
-│   ├── PropertyCatalog.php                 Application service, single entry point for reads
-│   ├── PropertySearchResult.php, SearchFacets.php, PropertyNotFoundException.php
-├── Repository/PropertyRepository.php       Query building (filters, sorting, pagination, facets)
-├── Entity/Property.php, Enum/              Domain model (PropertyType, PropertySort)
-├── View/                                   Output representations shared by REST and MCP
-├── EventSubscriber/ApiExceptionSubscriber  Consistent RFC 9457 error responses under /api
-└── Import/, Command/                       Dataset import (app:properties:import)
-```
+## Key decisions
 
-### REST API
+- **MCP inside the backend, on the application layer.** Reading the database directly would
+  duplicate the search logic; calling the REST API would add a second process and a network hop.
+  Sharing `PropertyCatalog` means the UI and `search_properties` cannot diverge, and a test asserts
+  they return the same results. Trade-off: the MCP server is deployed with the backend.
+- **SQLite seeded from JSON.** The data is easy to review and the filters run as real SQL through
+  Doctrine; moving to PostgreSQL only needs a different `DATABASE_URL`.
+- **Explicit API contract.** Plain Symfony controllers with a validated DTO; every error is an
+  RFC 9457 problem document (422 with per-field violations, 404 for unknown properties).
+- **Tools designed for the model.** Same argument names as the API, an `outputSchema` on every tool,
+  business errors returned as `isError` so the model can correct itself, and `get_market_overview`
+  for questions the listing endpoints cannot answer ("Which city is cheapest per m²?").
+- **The URL is the search state.** Shareable links, a working back button and server-side rendering
+  of the same results; loading, error and empty states are all handled.
+- **Rule-based quick search, not an LLM.** It turns "apartments in Berlin, 3+ bedrooms, max €500k"
+  into filters offline and is unit-tested; understanding free text is what the MCP server is for.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/properties` | Search. Query params (all optional): `city`, `minPrice`, `maxPrice`, `minBedrooms`, `type` (`apartment`, `house`, `studio`, `penthouse`, `townhouse`), `sort` (`newest`, `price_asc`, `price_desc`, `area_desc`), `page`, `perPage` (1–50). |
-| `GET` | `/api/properties/{id}` | Property details. |
-| `GET` | `/api/properties/facets` | Cities and types with counts, price range, max bedrooms (used to build the filter form). |
+More detail on each decision: [docs/decisions.md](docs/decisions.md).
 
-```jsonc
-// GET /api/properties?city=Berlin&minBedrooms=3&maxPrice=500000
-{
-  "data": [{ "id": 9, "title": "…", "type": "apartment", "city": "Berlin", "price": 329000, "bedrooms": 3, … }],
-  "meta": { "total": 4, "page": 1, "perPage": 12, "totalPages": 1,
-            "filters": { "city": "Berlin", "maxPrice": 500000, "minBedrooms": 3 }, "sort": "newest" }
-}
+## Next steps
 
-// GET /api/properties?minPrice=500000&maxPrice=100000&type=castle → 422 application/problem+json
-{
-  "type": "about:blank", "title": "Unprocessable Content", "status": 422,
-  "detail": "The request contains invalid parameters.",
-  "violations": [
-    { "field": "maxPrice", "message": "The maximum price must be greater than or equal to the minimum price." },
-    { "field": "type", "message": "Unknown property type \"castle\". Allowed values: \"apartment\", \"house\", …" }
-  ]
-}
-```
-
-### Frontend (`frontend/`)
-
-```
-pages/index.vue                  Search: filters + results + pagination, all states handled
-pages/properties/[id].vue        Details: gallery, key facts, features, map; real 404 for unknown ids
-components/search/               QuickSearch (free text), McpCallPreview, SearchFilters (form),
-                                 SearchResultsHeader (count + sort)
-components/property/             PropertyCard, PropertyGrid, PropertyCardSkeleton, PropertyImage,
-                                 PropertyGallery, PropertyFacts, PropertyLocationMap
-components/common/               EmptyState, ErrorState
-composables/usePropertySearch.ts URL query ⇄ filters ⇄ API
-composables/useSearchFacets.ts   Filter options
-utils/                           search-query (URL ⇄ filters), quick-search (free text → filters),
-                                 mcp-call (filters → search_properties call), format, api-error
-server/api/[...path].ts          Proxy /api/** → Symfony
-types/property.ts                API contract types
-```
-
----
-
-## Technical decisions
-
-### 1. The MCP server lives in the backend and calls the application layer
-
-The challenge asks whether the MCP server should read the database directly or go through the API. I chose a third option: the MCP tools are a second adapter inside the Symfony app, next to the REST controller. Both call the same application service (`PropertyCatalog`) and validate the same DTO (`PropertySearchCriteria`).
-
-- **Why not direct database access?** The filtering, sorting and validation logic would exist twice, and the two copies would drift apart. The requirement that the same search works in the app and in `search_properties` is only guaranteed if both use one implementation.
-- **Why not call the REST API over HTTP?** It would need a second process and a network hop, and the MCP server would fail whenever the API is down. The HTTP contract would also have to be mapped again into tool schemas and types. The PHP SDK already gives us JSON Schema generation from typed method signatures, so the tools stay thin adapters.
-- **Trade-offs:** the MCP server scales and deploys together with the backend. If it ever needs to be deployed on its own, the tools only depend on `PropertyCatalog`, so they could be moved behind the HTTP API without touching the domain code. `symfony/mcp-bundle` is still marked experimental, so its version is pinned in `composer.lock`. It is maintained by the Symfony team together with the official `mcp/sdk`.
-
-MCP details:
-- Tool arguments use the **same names as the REST query parameters** (`minPrice`, `minBedrooms`, …), so there is one vocabulary.
-- Arguments are validated **twice, by design**. The SDK checks them against the JSON Schema (types, enums, ranges) and returns JSON-RPC `-32602` on failure. The domain constraints (for example `maxPrice >= minPrice`) come back as **tool errors** (`isError: true`) with a readable message, so the model can correct itself.
-- Results are sent as **`structuredContent`**, plus the same JSON as text content for older clients, as the MCP spec recommends. All three tools declare an **`outputSchema`**, and a test validates real tool results against it so the contract cannot drift.
-- Input schemas are written for **portability across clients**. Optional filters use `anyOf: [{type}, {type: "null"}]` instead of type arrays, because some clients (e.g. Gemini's function-calling dialect) reject type arrays and the MCP Inspector sends empty fields as `null`. They also include `examples` (e.g. `"Berlin"`, `500000`) to guide the model.
-- Results include hints for the model: a `note` when results are truncated or empty, a `url` to the property page, and the tools are annotated as read-only and idempotent.
-- The tools are exposed over **Streamable HTTP and stdio** from the same configuration.
-
-### 2. Data: SQLite + Doctrine, seeded from a JSON file
-
-The dataset is a readable JSON file (`backend/data/properties.json`) that is imported into SQLite on startup (`app:properties:import --if-empty`). Filters then run as real SQL queries through Doctrine, which provides pagination, sorting and aggregate facets, and the data is still easy to review in a pull request. The schema is managed with a Doctrine migration. Switching to PostgreSQL would only require changing `DATABASE_URL`.
-
-### 3. API design
-
-- Plain Symfony controllers with a DTO mapped by `#[MapQueryString]`. I chose this over API Platform to keep the contract explicit and small.
-- The response has a `data`/`meta` envelope. `meta` returns pagination, the **applied filters** and the sort, which makes client-side debugging easier.
-- All filters are optional and combined with AND. City matching is case-insensitive. `minBedrooms` means "at least", which matches the challenge wording ("pelo menos 3 quartos").
-- `type` and `sort` are validated with `Choice` instead of being deserialized directly into enums, so a wrong value produces "Allowed values: …" instead of a generic type error.
-- Sorting uses `id` as a tie-breaker, so pagination stays stable.
-- Every error under `/api` is returned as **RFC 9457 problem details** (`application/problem+json`): 404 for unknown properties and 422 with a `violations` list for invalid filters. Internal errors never expose details in production.
-
-### 4. Frontend
-
-- **The URL is the source of truth for the search state.** Filters, sort and page live in the query string. Links can be shared, back/forward navigation works, and a reload server-side renders the same results. URL parsing is lenient: a hand-edited, invalid value is ignored instead of breaking the page. The API is still strict.
-- **Backend-for-frontend proxy** (`server/api/[...path].ts`): the browser only talks to the Nuxt origin, so no CORS setup is needed and the backend address is configured at runtime (`NUXT_API_BASE_URL`). If the backend is unreachable, the proxy returns a 502 problem document with the same shape as the API errors.
-- **All states are handled explicitly:**
-  - Initial load shows skeleton cards.
-  - Refetching dims the current results instead of replacing them with a spinner.
-  - Errors are shown inline with a message from the problem details and a retry button.
-  - Empty results offer to clear the filters.
-  - A page past the last one gets its own message.
-  - An unknown property shows a real 404 page with the correct HTTP status.
-  - Broken images fall back to a placeholder.
-- **Quick search:** a free-text bar turns sentences like *"apartments in Berlin, at least 3 bedrooms, max €500k"* into filters. It recognizes cities (including German names like "München"), property types, bedrooms, and price limits and ranges. Below it, the UI shows the **equivalent MCP call** (`search_properties({ city: "Berlin", … })`) with a copy button, which makes visible that the UI and the MCP tool are the same search.
-  - The parser is **deterministic and rule-based**, not an LLM. It works offline, needs no API key to evaluate the project and is fully unit-tested. Free-text understanding by a model is exactly what the MCP server enables: an AI client calls `search_properties` itself.
-- **Filter UX:** the city select and the type and bedroom chips apply immediately. Price inputs are debounced and validated on the client (min ≤ max), so the API is not called with a range that is known to be invalid. The filters sit in a sidebar on desktop and in a slide-over on mobile, and a "Clear all" button appears when filters are active.
-- **Components:** pages only compose. Data fetching lives in composables, formatting and URL logic in pure, unit-tested utilities, and presentation in small single-purpose components.
-- **Extras:** dark mode, a location map (OpenStreetMap embed, which needs no API key or extra library), SEO meta per property, and accessibility details (`role="search"`, `aria-busy`, `aria-live`, labelled controls).
-
-### 5. Versions
-
-- **Symfony 7.4 LTS** (supported until 2029), running on **FrankenPHP** in Docker.
-- **Nuxt 3.21**, because the challenge asks for Vue 3 / Nuxt 3. This is also why I use **Nuxt UI 3**: Nuxt UI 4 requires Nuxt ≥ 4.1. The code already uses the patterns Nuxt 4 expects, so an upgrade would mostly consist of moving files into `app/` and bumping Nuxt UI.
-- Vue APIs (`ref`, `computed`, `watch`) are **imported explicitly**. With this Nuxt/Vue combination, the generated auto-import declarations resolve them to `any`, which would silently weaken `nuxt typecheck` in strict mode. Nuxt composables (`useFetch`, `useRoute`, …) and utilities stay auto-imported.
-
-## What I would do next
-
-- Generate an OpenAPI description (e.g. NelmioApiDocBundle) and derive the frontend types from it, instead of mirroring them by hand in `types/property.ts`.
-- Add end-to-end tests with Playwright and run everything in CI (GitHub Actions).
-- Full-text search on title and description.
-- Location search via geocoding instead of matching city names: districts, postcodes, a radius ("within 5 km of…") and alternate names ("München" / "Munich", "Köln" / "Cologne").
-- Internationalization (English and German first) with `@nuxtjs/i18n`. Price and date formatting is already centralized in `utils/format.ts`, so it is mainly a matter of extracting the UI texts.
-- Add an MCP prompt (for example "find a home for a family of four") and MCP resources for individual listings.
-- Add authentication to the MCP HTTP endpoint (OAuth, as specified by MCP) before exposing it publicly.
+- Location search via geocoding (districts, postcodes, "München" / "Munich")
+- OpenAPI description with generated frontend types
+- End-to-end tests and CI
+- OAuth on the MCP endpoint before exposing it publicly
