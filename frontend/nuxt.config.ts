@@ -23,6 +23,12 @@ export default defineNuxtConfig({
     },
   },
 
+  // Light theme by default; the header toggle still switches to dark (and remembers the choice).
+  colorMode: {
+    preference: 'light',
+    fallback: 'light',
+  },
+
   // Icons are bundled at build time so the UI does not depend on the Iconify API at runtime.
   icon: {
     serverBundle: 'local',
