@@ -252,6 +252,8 @@ The dataset is a readable JSON file (`backend/data/properties.json`) that is imp
 
 - Generate an OpenAPI description (e.g. NelmioApiDocBundle) and derive the frontend types from it, instead of mirroring them by hand in `types/property.ts`.
 - Add end-to-end tests with Playwright and run everything in CI (GitHub Actions).
-- Full-text search (title/description) and geographic search ("within 5 km of…").
+- Full-text search on title and description.
+- Location search via geocoding instead of matching city names: districts, postcodes, a radius ("within 5 km of…") and alternate names ("München" / "Munich", "Köln" / "Cologne").
+- Internationalization (English and German first) with `@nuxtjs/i18n`. Price and date formatting is already centralized in `utils/format.ts`, so it is mainly a matter of extracting the UI texts.
 - Add an MCP prompt (for example "find a home for a family of four") and MCP resources for individual listings.
 - Add authentication to the MCP HTTP endpoint (OAuth, as specified by MCP) before exposing it publicly.
