@@ -15,27 +15,31 @@ const emit = defineEmits<{
 }>()
 
 const query = ref('')
-const notUnderstood = ref(false)
+const feedback = ref<{ understood: string[], ignored: string[] } | null>(null)
 let lastApplied: string | undefined
 
 function submit() {
-  const parsed = parseQuickSearch(query.value, props.cities)
-  notUnderstood.value = query.value.trim() !== '' && Object.keys(parsed).length === 0
-  if (notUnderstood.value) {
+  const { filters, ignored } = parseQuickSearch(query.value, props.cities)
+  const understood = summarizeQuickSearch(filters)
+  feedback.value = query.value.trim() === '' ? null : { understood, ignored }
+  if (query.value.trim() !== '' && understood.length === 0) {
     return
   }
 
-  lastApplied = JSON.stringify(toSearchQuery({ ...parsed, sort: DEFAULT_SORT, page: 1 }))
-  emit('search', parsed)
+  lastApplied = JSON.stringify(toSearchQuery({ ...filters, sort: DEFAULT_SORT, page: 1 }))
+  emit('search', filters)
 }
 
 // Once the filters are changed by other means, the text no longer describes the search.
 watch(() => props.filters, (filters) => {
   if (lastApplied !== undefined && JSON.stringify(toSearchQuery({ ...filters, sort: DEFAULT_SORT, page: 1 })) !== lastApplied) {
     query.value = ''
+    feedback.value = null
     lastApplied = undefined
   }
 })
+
+const SUPPORTED = 'You can search by city, property type, minimum number of bedrooms and price, e.g. "house in Hamburg under 1.5m".'
 </script>
 
 <template>
@@ -57,7 +61,7 @@ watch(() => props.filters, (filters) => {
         aria-label="Describe what you are looking for"
         class="min-w-0 flex-1"
         :ui="{ base: 'px-0' }"
-        @update:model-value="notUnderstood = false"
+        @update:model-value="() => { feedback = null }"
       />
       <UButton
         type="submit"
@@ -65,12 +69,29 @@ watch(() => props.filters, (filters) => {
         size="lg"
       />
     </div>
-    <p
-      v-if="notUnderstood"
-      class="mt-2 text-sm text-warning"
+    <div
+      v-if="feedback"
+      class="mt-2 space-y-1 text-sm"
       role="status"
     >
-      No filters recognized. Mention a city, a property type, bedrooms or a price, e.g. "house in Hamburg under 1.5m".
-    </p>
+      <p
+        v-if="feedback.understood.length"
+        class="text-muted"
+      >
+        Searching for: <span class="text-default">{{ feedback.understood.join(' · ') }}</span>
+      </p>
+      <p
+        v-else
+        class="text-warning"
+      >
+        No filters recognized. {{ SUPPORTED }}
+      </p>
+      <p
+        v-if="feedback.understood.length && feedback.ignored.length"
+        class="text-warning"
+      >
+        Ignored {{ feedback.ignored.map(part => `"${part}"`).join(', ') }}. {{ SUPPORTED }}
+      </p>
+    </div>
   </form>
 </template>

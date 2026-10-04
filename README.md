@@ -38,14 +38,26 @@ cd frontend && npm ci && npm test           # utilities and components
 <details>
 <summary>Without Docker (PHP 8.4, Composer, Node 22)</summary>
 
-```bash
-cd backend && composer install
-php bin/console doctrine:migrations:migrate -n && php bin/console app:properties:import
-php -S localhost:8000 -t public     # API on :8000, MCP over HTTP at /mcp
-php bin/console mcp:server          # MCP over stdio
+Terminal 1, the backend (API on :8000, MCP over HTTP at `/mcp`):
 
-cd frontend && npm install && npm run dev
+```bash
+cd backend
+composer install
+php bin/console doctrine:migrations:migrate -n
+php bin/console app:properties:import
+php -S localhost:8000 -t public
 ```
+
+Terminal 2, the frontend (from the repository root):
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+MCP over stdio needs no terminal of its own: the client starts `php bin/console mcp:server`
+(run from `backend/`) when it connects.
 </details>
 
 ## MCP server
@@ -94,7 +106,8 @@ talks to the Nuxt server, which proxies `/api` to Symfony.
   Sharing `PropertyCatalog` means the UI and `search_properties` cannot diverge, and a test asserts
   they return the same results. Trade-off: the MCP server is deployed with the backend.
 - **SQLite seeded from JSON.** The data is easy to review and the filters run as real SQL through
-  Doctrine; moving to PostgreSQL only needs a different `DATABASE_URL`.
+  Doctrine. The queries are portable; moving to PostgreSQL means a new `DATABASE_URL` and
+  regenerating the migration, which is written in SQLite's dialect.
 - **Explicit API contract.** Plain Symfony controllers with a validated DTO; every error is an
   RFC 9457 problem document (422 with per-field violations, 404 for unknown properties).
 - **Tools designed for the model.** Same argument names as the API, an `outputSchema` on every tool,
@@ -102,8 +115,12 @@ talks to the Nuxt server, which proxies `/api` to Symfony.
   for questions the listing endpoints cannot answer ("Which city is cheapest per m²?").
 - **The URL is the search state.** Shareable links, a working back button and server-side rendering
   of the same results; loading, error and empty states are all handled.
+- **Responsive from phone to desktop.** Filters sit in a sidebar on large screens and in a
+  slide-over on small ones, the results grid goes from one to three columns, and the property page
+  stacks its columns and shows the photos one at a time with a scrollable strip of thumbnails.
 - **Rule-based quick search, not an LLM.** It turns "apartments in Berlin, 3+ bedrooms, max €500k"
-  into filters offline and is unit-tested; understanding free text is what the MCP server is for.
+  into filters offline and is unit-tested. It shows what it understood and names the parts it
+  ignored, instead of guessing; understanding free text is what the MCP server is for.
 
 More detail on each decision: [docs/decisions.md](docs/decisions.md).
 
