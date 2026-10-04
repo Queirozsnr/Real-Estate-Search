@@ -45,6 +45,26 @@ describe('SearchFilters', () => {
     expect(withFilters.emitted('reset')).toHaveLength(1)
   })
 
+  it('enables "Reset" for a price range that was typed but not applied', async () => {
+    const wrapper = await mountSuspended(SearchFilters, { props: { filters: { sort: 'newest', page: 1 } } })
+    const [min, max] = wrapper.findAll('input')
+      .filter(input => input.attributes('aria-label')?.includes('price'))
+
+    await min!.setValue('800000')
+    await min!.trigger('blur')
+    await max!.setValue('200000')
+    await max!.trigger('blur')
+    expect(wrapper.text()).toContain('The minimum price cannot be higher than the maximum price.')
+
+    const reset = wrapper.findAll('button').find(button => button.text() === 'Reset')
+    expect(reset!.attributes('disabled')).toBeUndefined()
+
+    await reset!.trigger('click')
+
+    expect(wrapper.text()).not.toContain('The minimum price cannot be higher than the maximum price.')
+    expect(wrapper.emitted('reset')).toBeUndefined()
+  })
+
   it('clears the city', async () => {
     const wrapper = await mountSuspended(SearchFilters, { props: { filters: { sort: 'newest', page: 1, city: 'Berlin' } } })
 

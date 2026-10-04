@@ -90,6 +90,19 @@ watch([minPrice, maxPrice], applyPrice)
 
 const activeFilterCount = computed(() => countActiveFilters(props.filters))
 
+// Prices typed but not applied yet (e.g. an invalid range) also count, so Reset can clear them.
+const hasPendingPrice = computed(() =>
+  minPrice.value !== (props.filters.minPrice ?? null) || maxPrice.value !== (props.filters.maxPrice ?? null),
+)
+
+function reset() {
+  minPrice.value = null
+  maxPrice.value = null
+  if (activeFilterCount.value > 0) {
+    emit('reset')
+  }
+}
+
 const priceInputUi = { increment: 'hidden', decrement: 'hidden', base: 'px-2.5 text-left' }
 </script>
 
@@ -113,8 +126,8 @@ const priceInputUi = { increment: 'hidden', decrement: 'hidden', base: 'px-2.5 t
         variant="link"
         size="sm"
         class="ml-auto px-0"
-        :disabled="activeFilterCount === 0"
-        @click="emit('reset')"
+        :disabled="activeFilterCount === 0 && !hasPendingPrice"
+        @click="reset"
       />
     </div>
 
