@@ -35,6 +35,17 @@ function backToResults() {
     navigateTo('/')
   }
 }
+
+// The dataset has no agent contact details, so the button says it is an example instead of opening a fake address.
+const toast = useToast()
+
+function showContactDemoNotice() {
+  toast.add({
+    title: 'This is an example',
+    description: 'In a live listing, this button would let you contact the agent.',
+    icon: 'i-lucide-info',
+  })
+}
 </script>
 
 <template>
@@ -130,12 +141,20 @@ function backToResults() {
 
             <PriceComparison :market="property.market" />
 
-            <UButton
-              :to="`mailto:agent@example.com?subject=${encodeURIComponent(`Enquiry: ${property.title}`)}`"
-              label="Contact agent"
-              block
-              size="xl"
-            />
+            <div class="space-y-2">
+              <UButton
+                label="Contact agent"
+                icon="i-lucide-mail"
+                block
+                size="xl"
+                @click="showContactDemoNotice"
+              />
+              <CopyLinkButton
+                color="neutral"
+                variant="outline"
+                size="lg"
+              />
+            </div>
 
             <p class="text-center text-xs text-muted">
               Listed on {{ formatDate(property.listedAt) }}
