@@ -50,8 +50,9 @@ the SDK generates the JSON Schema from the typed method signature.
 ## 2. Data
 
 The dataset is a readable JSON file (27 fictional listings in five German cities) imported into
-SQLite on startup. Filters run as real SQL through Doctrine, the schema is managed with a migration,
-and switching to PostgreSQL only needs a different `DATABASE_URL`. Photos are Unsplash images,
+SQLite on startup. Filters run as real SQL through Doctrine and the schema is managed with a
+migration. The queries are portable, but the migration is written in SQLite's dialect, so switching
+to PostgreSQL means a new `DATABASE_URL` plus a regenerated migration. Photos are Unsplash images,
 checked to exist and to show homes; the frontend falls back to a placeholder if one fails to load.
 
 ## 3. API design
@@ -98,7 +99,14 @@ checked to exist and to show homes; the frontend falls back to a placeholder if 
   top of the property page, which loads eagerly so the visible part of the page is not delayed. The
   map iframe at the bottom of the page is lazy as well.
 - **Quick search is rule-based, not an LLM:** it works offline, needs no API key and is unit-tested.
-  Understanding free text is the MCP server's job.
+  It shows a summary of what it understood and lists the parts it ignored, so a sentence it cannot
+  read is never applied silently. The search only has a minimum for bedrooms, so "at most 2
+  bedrooms" is reported as ignored rather than turned into "2 or more". Understanding free text is
+  the MCP server's job.
+- **Responsive layout:** the filters are a sidebar on large screens and a slide-over with a
+  "Show N results" button on small ones; the results grid has one, two or three columns; the
+  property page stacks its two columns and shows the photos one at a time, with arrows and a
+  horizontally scrollable strip of thumbnails.
 - **Components:** pages only compose; composables hold data fetching; URL and formatting logic are
   pure, tested utilities; components receive props and emit events, so the same filter form serves
   the desktop sidebar and the mobile slide-over.
